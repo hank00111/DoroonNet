@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <ApplicationDefinition Update="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\CustomMarker.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Resources\GroundMarker.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Resources\M_DroneMarker.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\FlightInfo.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\FlightInfoRight.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\LiveChart.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\XYZChart.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resources\CustomMarker.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resources\CustomThemes.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resources\GroundMarker.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resources\ListView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Resources\M_DroneMarker.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\FlightInfo.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\FlightInfoRight.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\LiveChart.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\XYZChart.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>

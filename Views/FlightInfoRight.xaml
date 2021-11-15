@@ -1,0 +1,25 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DoroonNet.Views"
+             xmlns:Data="clr-namespace:DoroonNet.Command" xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" x:Class="DoroonNet.Views.FlightInfoRight"
+             >
+    <Grid Grid.Column ="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="ImageShowID" Text="{Binding ImageID, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" FontSize="14" HorizontalAlignment="Center" FontFamily="Google Sans"/>
+        <TextBlock x:Name="DataShowID" Text="{Binding DataID, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=Explicit}" FontSize="14" Grid.Column="1" HorizontalAlignment="Center" FontFamily="Google Sans"/>
+        <Button Grid.Row="2" Content="Send_Test" MaxWidth="58" MaxHeight="30" Click="Button_Click" FontWeight="Bold" mah:ControlsHelper.ContentCharacterCasing="Normal" />
+
+    </Grid>
+</UserControl>

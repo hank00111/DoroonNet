@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="DoroonNet.Resources.GroundMarker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DoroonNet.Resources"
+             Height="28" Width="28">
+    <Image x:Name="icon" Height="28" Width="28">
+        <Image.Source>
+            <DrawingImage>
+                <DrawingImage.Drawing>
+                    <DrawingGroup>
+                        <GeometryDrawing Brush="Azure" Geometry="M7.70024 8.01528C6.08806 9.76386 5.09091 12.1795 5.09091 14.8477C5.09091 17.8535 6.35632 20.5387 8.34088 22.3109L10.1527 20.3459C8.62362 19.0853 7.63636 17.0915 7.63636 14.8477C7.63636 12.9418 8.34861 11.2164 9.50015 9.96743L7.70024 8.01528Z"/>
+                        <GeometryDrawing Brush="Azure" Geometry="M18.4997 9.96728C19.6513 11.2163 20.3636 12.9418 20.3636 14.8477C20.3636 17.0916 19.3763 19.0854 17.8471 20.346L19.659 22.311C21.6436 20.5388 22.9091 17.8536 22.9091 14.8477C22.9091 12.1794 21.9119 9.76373 20.2996 8.01513L18.4997 9.96728Z"/>
+                        <GeometryDrawing Brush="Azure" Geometry="M0 14.8477C0 10.6548 1.56697 6.85877 4.10043 4.11099L5.90034 6.06313C3.82752 8.31131 2.54545 11.4171 2.54545 14.8477C2.54545 18.2783 3.82751 21.3841 5.90032 23.6323L4.10041 25.5844C1.56697 22.8366 0 19.0406 0 14.8477Z"/>
+                        <GeometryDrawing Brush="Azure" Geometry="M23.8995 25.5845C26.433 22.8368 28 19.0407 28 14.8477C28 10.6547 26.433 6.85863 23.8994 4.11084L22.0995 6.06299C24.1724 8.31118 25.4545 11.417 25.4545 14.8477C25.4545 18.2783 24.1724 21.3842 22.0995 23.6324L23.8995 25.5845Z"/>
+                        <GeometryDrawing Brush="Azure" Geometry="M14 10.7067C16.1087 10.7067 17.8182 12.5608 17.8182 14.8478C17.8182 16.6509 16.7557 18.1848 15.2727 18.7533V25.8908H12.7273V18.7533C11.2443 18.1848 10.1818 16.6509 10.1818 14.8478C10.1818 12.5608 11.8913 10.7067 14 10.7067ZM14 13.4675C14.7029 13.4675 15.2727 14.0855 15.2727 14.8478C15.2727 15.6102 14.7029 16.2282 14 16.2282C13.2971 16.2282 12.7273 15.6102 12.7273 14.8478C12.7273 14.0855 13.2971 13.4675 14 13.4675Z"/>
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+        </Image.Source>
+    </Image>
+    
+</UserControl>

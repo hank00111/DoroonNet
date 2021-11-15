@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# CS0649: 從未指派欄位 'MainWindow.CurrentElement'，會持續使用其預設值 null
+dotnet_diagnostic.CS0649.severity = none
