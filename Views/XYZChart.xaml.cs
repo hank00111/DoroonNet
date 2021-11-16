@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using DoroonNet.ViewModel;
 using ScottPlot;
 using ScottPlot.Control;
 using ScottPlot.Plottable;
@@ -67,7 +68,9 @@ namespace DoroonNet.Views
             InitializeComponent();
             xTickcount();
             PlotStyle();
-
+            this.DataContext = new InfoViewModel();
+            SelectList.Items.Clear();    
+            
         }
 
         int connnt = 0;
@@ -340,6 +343,11 @@ namespace DoroonNet.Views
             _renderTimer?.Start();
             _renderTimer1?.Start();
             _renderTimer2?.Start();
+            //if (SelectList.SelectedIndex == -1)
+            //{
+            //    SelectList.SelectedIndex = 0;
+            //}
+            //Console.WriteLine(SelectList.SelectedIndex);
         }
 
         private void Expander_Collapsed(object sender, RoutedEventArgs e)
@@ -359,6 +367,7 @@ namespace DoroonNet.Views
                 ChartGraphs_a(); 
                 ChartGraphs_b();
                 ChartGraphs_c();
+                
             }
             i++;
             //Expan.IsExpanded = true;
@@ -375,53 +384,29 @@ namespace DoroonNet.Views
         private void SelectList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var sel = SelectList.SelectedIndex;
-            DoubleAnimation animeUP = new DoubleAnimation(1, TimeSpan.FromSeconds(0.3));
-            DoubleAnimation animeDown = new DoubleAnimation(0, TimeSpan.FromSeconds(0.3));
+            //DoubleAnimation animeUP = new DoubleAnimation(1, TimeSpan.FromSeconds(0.3));
+            //DoubleAnimation animeDown = new DoubleAnimation(0, TimeSpan.FromSeconds(0.3));
             switch (sel)
             {
                 case 0:
                     if (A_Plot != null)
                     {
-                        A_Plot.Visibility = Visibility.Visible;
-                        B_Plot.Visibility = Visibility.Visible;
-                        C_Plot.Visibility = Visibility.Visible;
-                        A_Plot.BeginAnimation(OpacityProperty, animeUP);
-                        B_Plot.BeginAnimation(OpacityProperty, animeUP);
-                        C_Plot.BeginAnimation(OpacityProperty, animeUP);
                     }
                     break;
 
                 case 1:
-                    A_Plot.Visibility = Visibility.Visible;
-                    B_Plot.Visibility = Visibility.Collapsed;
-                    C_Plot.Visibility = Visibility.Collapsed;
-                    A_Plot.Opacity = 0;
-                    A_Plot.BeginAnimation(OpacityProperty, animeUP);
-                    B_Plot.BeginAnimation(OpacityProperty, animeDown);
-                    C_Plot.BeginAnimation(OpacityProperty, animeDown);
+
                     break;
 
                 case 2:
-                    A_Plot.Visibility = Visibility.Collapsed;
-                    B_Plot.Visibility = Visibility.Visible;
-                    C_Plot.Visibility = Visibility.Collapsed;
-                    B_Plot.Opacity = 0;
-                    A_Plot.BeginAnimation(OpacityProperty, animeDown);
-                    B_Plot.BeginAnimation(OpacityProperty, animeUP);
-                    C_Plot.BeginAnimation(OpacityProperty, animeDown);
+
                     break;
 
                 case 3:
-                    A_Plot.Visibility = Visibility.Collapsed;
-                    B_Plot.Visibility = Visibility.Collapsed;
-                    C_Plot.Visibility = Visibility.Visible;
-                    C_Plot.Opacity = 0;
-                    A_Plot.BeginAnimation(OpacityProperty, animeDown);
-                    B_Plot.BeginAnimation(OpacityProperty, animeDown);
-                    C_Plot.BeginAnimation(OpacityProperty, animeUP);
+
                     break;
             }
-            //Console.WriteLine(sel);
+            
         }
 
         #endregion

@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
         <TextBlock x:Name="ImageShowID" Text="{Binding ImageID, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" FontSize="14" HorizontalAlignment="Center" FontFamily="Google Sans"/>
         <TextBlock x:Name="DataShowID" Text="{Binding DataID, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=Explicit}" FontSize="14" Grid.Column="1" HorizontalAlignment="Center" FontFamily="Google Sans"/>
-        <Button Grid.Row="2" Content="Send_Test" MaxWidth="58" MaxHeight="30" Click="Button_Click" FontWeight="Bold" mah:ControlsHelper.ContentCharacterCasing="Normal" />
+        <Button Grid.Row="2" Content="Send_Test" MaxWidth="58" MaxHeight="30" Click="Button_Click" FontWeight="Bold" mah:ControlsHelper.ContentCharacterCasing="Normal" Visibility="Hidden" />
 
     </Grid>
 </UserControl>
