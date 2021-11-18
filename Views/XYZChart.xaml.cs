@@ -62,6 +62,8 @@ namespace DoroonNet.Views
         public static float X = 0, Y = 0, Z = 0, X1 = 0, Y1 = 0, Z1 = 0, X2 = 0, Y2 = 0, Z2 = 0;//#1
 
         public static bool IsDisconnect = true;
+        public static int SelClient = 0;
+        static InfoViewModel ins = new InfoViewModel();
 
         public XYZChart()
         {
@@ -383,14 +385,31 @@ namespace DoroonNet.Views
 
         private void SelectList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var sel = SelectList.SelectedIndex;
+            int sel = SelectList.SelectedIndex;
+            SelClient = sel;
+            //var aa = ins.CollectionListPartial.IndexOf(ins.CollectionListPartial.Where(X => X.ID == sel).FirstOrDefault());
+            if (sel != -1)
+            {
+                var aa = ins.CollectionListPartial.IndexOf(ins.CollectionListPartial.Where(X => X.ID == sel).FirstOrDefault());
+                //Console.WriteLine(aa.ToString()+" " + sel);
+                //for (int i = 0; i <= sel; i++)
+                //{
+                //    var aa = ins.CollectionListPartial.IndexOf(ins.CollectionListPartial.Where(X => X.ID == sel).FirstOrDefault());
+                //    var bb = ins.CollectionListPartial[i];
+                //    Console.WriteLine( " " + sel);
+                //}
+            }
+            Console.WriteLine(SelClient);
+            //var cc = ins.CollectionListPartial.First(X => X.ID == sel);
             //DoubleAnimation animeUP = new DoubleAnimation(1, TimeSpan.FromSeconds(0.3));
             //DoubleAnimation animeDown = new DoubleAnimation(0, TimeSpan.FromSeconds(0.3));
+            var cc = ins.CollectionListPartial.Where(X => X.ID == sel);
             switch (sel)
             {
                 case 0:
                     if (A_Plot != null)
                     {
+                        
                     }
                     break;
 

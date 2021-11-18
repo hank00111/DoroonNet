@@ -9,7 +9,7 @@
     <!--<ScrollViewer x:Name="Scrollv" VerticalScrollBarVisibility="Auto">-->
     <Expander x:Name="Expan" Expanded="Expander_Expanded" Collapsed="Expander_Collapsed" Margin="2,2,2,2" Style="{DynamicResource MahApps.Styles.Expander}" Header="波形圖" ExpandDirection="Down">
         <StackPanel>
-            <ListBox x:Name="SelectList" ItemsSource="{Binding CollectionListPartial}" SelectedValue="{Binding ID,Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="0" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalContentAlignment="Center" Background="#00000000" Foreground="#FF848E91" SelectionChanged="SelectList_SelectionChanged" >
+            <ListBox x:Name="SelectList" ItemsSource="{Binding CollectionListPartial}" SelectedValue="{Binding ID,Mode=OneWay}" SelectedIndex="0" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalContentAlignment="Center" Background="#00000000" Foreground="#FF848E91" SelectionChanged="SelectList_SelectionChanged" >
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal"/>

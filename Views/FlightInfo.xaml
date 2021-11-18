@@ -25,7 +25,7 @@
                             </Grid.Resources>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="22"/><!--id-->
-                                <ColumnDefinition Width="15"/><!--ID-->
+                                <ColumnDefinition Width="25"/><!--ID-->
                                 <ColumnDefinition Width="58"/><!--st-->
                                 <ColumnDefinition Width="75"/><!--ST-->
                                 <ColumnDefinition Width="48"/><!--hdg-->

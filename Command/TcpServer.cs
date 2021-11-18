@@ -2,6 +2,7 @@
 using DoroonNet.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -27,9 +28,11 @@ namespace DoroonNet.Command
         static ConsolePrint ConSoPt = new ConsolePrint();
         static MemoryStream memStream = new MemoryStream();
         static ManualResetEvent allDone = new ManualResetEvent(false);
-        static List<Socket> Clients = new List<Socket>();
+        public static List<Socket> Clients = new List<Socket>();
         static InfoViewModel ins = new InfoViewModel();
         static FlightInfoRightCommand firc;
+        static List<int> Item = new List<int>();
+        static int NextClint = 1;
 
 
         public void AsyncSocketListeners()
@@ -48,6 +51,7 @@ namespace DoroonNet.Command
                     ip = index;
                     //Console.WriteLine(index);
                 }
+                ///Console.WriteLine(ipHostInfo.AddressList[index]);
             }
             #region Set IP/Port
             IPAddress ipAddress = ipHostInfo.AddressList[ip];
@@ -61,7 +65,6 @@ namespace DoroonNet.Command
                 listener.Bind(localEndPoint);
                 listener.Listen(20);
                 listener.IOControl(IOControlCode.KeepAliveValues, KeepAlive(1, 1000, 1000), null);
-                //tims.Start();
                 while (true)
                 {
                     allDone.Reset();
@@ -103,18 +106,19 @@ namespace DoroonNet.Command
         {
             ConnectObject state = (ConnectObject)ar.AsyncState;
             Socket handler = state.workSocket;
-            //int bytesRead = handler.EndReceive(ar);
             try
             {
                 int bytesRead = handler.EndReceive(ar);
+
                 if (bytesRead > 0)
                 {
                     memStream.Write(state.buffer, 0, bytesRead);
-                    //ConSoPt.ConsoPrint(BitConverter.ToString(memStream.ToArray()));
 
                     if (BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("30"))
                     {
-                        FlightDataConvert(memStream.ToArray());       
+                        var ClientDataCheck = Clients.IndexOf(Clients.Where(X => X.RemoteEndPoint == handler.RemoteEndPoint).FirstOrDefault());
+                        if(ClientDataCheck == XYZChart.SelClient) WaveDataConvert(memStream.ToArray());
+                        FlightDataConvert(ClientDataCheck, memStream.ToArray());
                         memStream.SetLength(0);
                     }
                     //Console.WriteLine(((IPEndPoint)handler.RemoteEndPoint).Port.ToString());
@@ -123,12 +127,13 @@ namespace DoroonNet.Command
                 else
                 {
                     XYZChart.IsDisconnect = true;
-                    var aa = Clients.IndexOf(Clients.Where(X => X.RemoteEndPoint == handler.RemoteEndPoint).FirstOrDefault());
+                    var DisClient = Clients.IndexOf(Clients.Where(X => X.RemoteEndPoint == handler.RemoteEndPoint).FirstOrDefault());
                     Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
                     {
-                        ins.CollectionListPartial.RemoveAt(aa);
+                        ins.CollectionListPartial.RemoveAt(DisClient);
                     });
-                    FlightInfoRightCommand FIRC = new FlightInfoRightCommand() { DataID = "" };
+                    
+                    FlightInfoRightCommand FIRC = new FlightInfoRightCommand() { DataID = "" };                    
                     Clients.Remove(handler);
                     ConSoPt.ConsoPrint("#" + ((IPEndPoint)handler.RemoteEndPoint).Port.ToString() + " Disconnect");
                 }
@@ -187,8 +192,6 @@ namespace DoroonNet.Command
             {
                 Console.WriteLine(ex.ToString());
             }
-
-
             
         }
 
@@ -222,81 +225,83 @@ namespace DoroonNet.Command
 
         //歐拉角 XYZ 180 -180 0-360
 
-        public static void FlightDataConvert(byte[] LatLngByte)
+        private static void WaveDataConvert(byte[] WaveByte)
+        {
+            XYZChart.IsDisconnect = false;
+            XYZChart.X = BitConverter.ToSingle(WaveByte.Skip(1).Take(4).ToArray(), 0);
+            XYZChart.Y = BitConverter.ToSingle(WaveByte.Skip(5).Take(4).ToArray(), 0);
+            XYZChart.Z = BitConverter.ToSingle(WaveByte.Skip(9).Take(4).ToArray(), 0);
+            XYZChart.X1 = BitConverter.ToSingle(WaveByte.Skip(13).Take(4).ToArray(), 0);
+            XYZChart.Y1 = BitConverter.ToSingle(WaveByte.Skip(17).Take(4).ToArray(), 0);
+            XYZChart.Z1 = BitConverter.ToSingle(WaveByte.Skip(21).Take(4).ToArray(), 0);
+            XYZChart.X2 = BitConverter.ToSingle(WaveByte.Skip(25).Take(4).ToArray(), 0);
+            XYZChart.Y2 = BitConverter.ToSingle(WaveByte.Skip(29).Take(4).ToArray(), 0);
+            XYZChart.Z2 = BitConverter.ToSingle(WaveByte.Skip(33).Take(4).ToArray(), 0);
+            WaveByte = null;
+        }
+
+        public static void FlightDataConvert(int selClient ,byte[] LatLngByte)
         {           
             XYZChart.IsDisconnect = false;
             Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
-                //int SetV = 0;
-                XYZChart.X = BitConverter.ToSingle(LatLngByte.Skip(1).Take(4).ToArray(), 0);
-                XYZChart.Y = BitConverter.ToSingle(LatLngByte.Skip(5).Take(4).ToArray(), 0);
-                XYZChart.Z = BitConverter.ToSingle(LatLngByte.Skip(9).Take(4).ToArray(), 0);
-                XYZChart.X1 = BitConverter.ToSingle(LatLngByte.Skip(13).Take(4).ToArray(), 0);
-                XYZChart.Y1 = BitConverter.ToSingle(LatLngByte.Skip(17).Take(4).ToArray(), 0);
-                XYZChart.Z1 = BitConverter.ToSingle(LatLngByte.Skip(21).Take(4).ToArray(), 0);
-                XYZChart.X2 = BitConverter.ToSingle(LatLngByte.Skip(25).Take(4).ToArray(), 0);
-                XYZChart.Y2 = BitConverter.ToSingle(LatLngByte.Skip(29).Take(4).ToArray(), 0);
-                XYZChart.Z2 = BitConverter.ToSingle(LatLngByte.Skip(33).Take(4).ToArray(), 0);
+                //XYZChart.X = BitConverter.ToSingle(LatLngByte.Skip(1).Take(4).ToArray(), 0);
+                //XYZChart.Y = BitConverter.ToSingle(LatLngByte.Skip(5).Take(4).ToArray(), 0);
+                //XYZChart.Z = BitConverter.ToSingle(LatLngByte.Skip(9).Take(4).ToArray(), 0);
+                //XYZChart.X1 = BitConverter.ToSingle(LatLngByte.Skip(13).Take(4).ToArray(), 0);
+                //XYZChart.Y1 = BitConverter.ToSingle(LatLngByte.Skip(17).Take(4).ToArray(), 0);
+                //XYZChart.Z1 = BitConverter.ToSingle(LatLngByte.Skip(21).Take(4).ToArray(), 0);
+                //XYZChart.X2 = BitConverter.ToSingle(LatLngByte.Skip(25).Take(4).ToArray(), 0);
+                //XYZChart.Y2 = BitConverter.ToSingle(LatLngByte.Skip(29).Take(4).ToArray(), 0);
+                //XYZChart.Z2 = BitConverter.ToSingle(LatLngByte.Skip(33).Take(4).ToArray(), 0);
 
-                ins.CollectionListPartial[0] = new FlightData
-                {
-                    FlightHDG = BitConverter.ToInt32(LatLngByte.Skip(37).Take(4).ToArray(), 0),
-                    FlightSPD = MathF.Round(BitConverter.ToSingle(LatLngByte.Skip(41).Take(4).ToArray(), 0), 2),
-                    FlightALT = MathF.Round(BitConverter.ToSingle(LatLngByte.Skip(45).Take(4).ToArray(), 0), 2),
-                    FlightLAT = Math.Round(BitConverter.ToDouble(LatLngByte.Skip(49).Take(8).ToArray(), 0), 8),
-                    FlightLNG = Math.Round(BitConverter.ToDouble(LatLngByte.Skip(57).Take(8).ToArray(), 0), 8)
-                };
-                
-                //Array.Reverse(LatLngByte);
-                //for (int i = 1; i < LatLngByte.Length - 26; i = i + 8)//0 0<18-4 14  0<30-8 
+                ins.CollectionListPartial[selClient].FlightHDG = BitConverter.ToInt32(LatLngByte.Skip(37).Take(4).ToArray(), 0);
+                ins.CollectionListPartial[selClient].FlightSPD = MathF.Round(BitConverter.ToSingle(LatLngByte.Skip(41).Take(4).ToArray(), 0), 2);
+                ins.CollectionListPartial[selClient].FlightALT = MathF.Round(BitConverter.ToSingle(LatLngByte.Skip(45).Take(4).ToArray(), 0), 2);
+                ins.CollectionListPartial[selClient].FlightLAT = Math.Round(BitConverter.ToDouble(LatLngByte.Skip(49).Take(8).ToArray(), 0), 8);
+                ins.CollectionListPartial[selClient].FlightLNG = Math.Round(BitConverter.ToDouble(LatLngByte.Skip(57).Take(8).ToArray(), 0), 8);
+
+                //ins.CollectionListPartial[0] = new FlightData
                 //{
-                //    SetV += 1;
-                //    double res = BitConverter.ToDouble(LatLngByte, i);
-                //    switch (SetV)
-                //    {
-                //        case 1:
-                //            //VariableRes.Lng = res;//Lat
-                //            ins.CollectionListPartial[0] = new FlightData { FlightLNG = Math.Round(res, 6) };
-                //            break;
-                //        case 2:
-                //            //VariableRes.Lat = res;//Lng
-                //            ins.CollectionListPartial[0] = new FlightData { FlightLAT = Math.Round(res, 6) };
-                //            break;
-                //        default:
-                //            //Console.WriteLine(SetV);
-                //            break;
-                //    }
-                //    //ConSoPt.ConsoPrint(BitConverter.ToString(LatLngByte.ToArray()));
-                //    ConSoPt.ConsoPrint($"{res}");
-                //}
+                //    FlightHDG = BitConverter.ToInt32(LatLngByte.Skip(37).Take(4).ToArray(), 0),
+                //    FlightSPD = MathF.Round(BitConverter.ToSingle(LatLngByte.Skip(41).Take(4).ToArray(), 0), 2),
+                //    FlightALT = MathF.Round(BitConverter.ToSingle(LatLngByte.Skip(45).Take(4).ToArray(), 0), 2),
+                //    FlightLAT = Math.Round(BitConverter.ToDouble(LatLngByte.Skip(49).Take(8).ToArray(), 0), 8),
+                //    FlightLNG = Math.Round(BitConverter.ToDouble(LatLngByte.Skip(57).Take(8).ToArray(), 0), 8)
+                //};
+                
                 LatLngByte = null;
             });
-            //ConSoPt.ConsoPrint($"{XYZChart.X}+{XYZChart.Y}+{XYZChart.Z}");
 
         }
-
+              
         public static void ClientComp(Socket handle)
         {
+
             Clients.Add(handle);
             if (Clients.Count == ins.CollectionListPartial.Count)
             {
                 Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
                 {
-                    ins.CollectionListPartial[Clients.Count - 1] = new FlightData
-                    {
-                        ID = Clients.Count,
-                        FlightID = "#" + ((IPEndPoint)handle.RemoteEndPoint).Port.ToString()
-                    };
+                    ins.CollectionListPartial[Clients.Count - 1].ID = Clients.Count;
+                    ins.CollectionListPartial[Clients.Count - 1].FlightID = "#" + ((IPEndPoint)handle.RemoteEndPoint).Port.ToString();               
                 });
+                Console.WriteLine("A=b");
             }
             else if (Clients.Count > ins.CollectionListPartial.Count)
             {
+                NextClint++;
                 Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
                 {
                     ins.CollectionListPartial.Add(new FlightData() { ID = Clients.Count, FlightID = "#" + ((IPEndPoint)handle.RemoteEndPoint).Port.ToString() });
                 });
 
             }
+            //Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            //{
+            //    ins.CollectionListPartial.Add(new FlightData() { ID = 5, FlightID = "#" + ((IPEndPoint)handle.RemoteEndPoint).Port.ToString() });
+            //});
+            //Clients.Add(handle);
             firc = new FlightInfoRightCommand();
             firc.DataID = ((IPEndPoint)handle.RemoteEndPoint).Port.ToString();
             //FlightInfoRightCommand FIRC = new FlightInfoRightCommand() 

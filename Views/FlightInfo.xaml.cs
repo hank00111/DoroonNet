@@ -33,13 +33,13 @@ namespace DoroonNet.Views
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (FlightList.SelectedIndex != -1)
-            {                
-                firc.DataID = (FlightList.SelectedIndex + 1).ToString();
-                firc.SdataID = FlightList.SelectedIndex + 1;
-            }
+            //if (FlightList.SelectedIndex != -1)
+            //{                
+            //    firc.DataID = (FlightList.SelectedIndex + 1).ToString();
+            //    firc.SdataID = FlightList.SelectedIndex + 1;
+            //}
           
-            Console.WriteLine(firc.SdataID);
+            //Console.WriteLine(firc.SdataID);
         }
     }
 }
