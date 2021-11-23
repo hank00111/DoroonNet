@@ -62,7 +62,7 @@ namespace DoroonNet.Command
             try
             {
                 listener.Bind(localEndPoint);
-                listener.Listen(20);
+                listener.Listen(10);
                 listener.IOControl(IOControlCode.KeepAliveValues, KeepAlive(1, 1000, 1000), null);
                 while (true)
                 {
