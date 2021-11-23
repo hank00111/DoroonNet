@@ -399,33 +399,11 @@ namespace DoroonNet.Views
                 //    Console.WriteLine( " " + sel);
                 //}
             }
-            Console.WriteLine(SelClient);
+            //Console.WriteLine(SelClient);
             //var cc = ins.CollectionListPartial.First(X => X.ID == sel);
             //DoubleAnimation animeUP = new DoubleAnimation(1, TimeSpan.FromSeconds(0.3));
             //DoubleAnimation animeDown = new DoubleAnimation(0, TimeSpan.FromSeconds(0.3));
-            var cc = ins.CollectionListPartial.Where(X => X.ID == sel);
-            switch (sel)
-            {
-                case 0:
-                    if (A_Plot != null)
-                    {
-                        
-                    }
-                    break;
-
-                case 1:
-
-                    break;
-
-                case 2:
-
-                    break;
-
-                case 3:
-
-                    break;
-            }
-            
+        
         }
 
         #endregion

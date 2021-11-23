@@ -46,12 +46,12 @@ namespace DoroonNet.Command
             IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             for (int index = 0; index < ipHostInfo.AddressList.Length; index++)
             {
-                if (ipHostInfo.AddressList[index].ToString() == "192.168.0.100")
+                if (ipHostInfo.AddressList[index].ToString().Contains("192.168"))
                 {
                     ip = index;
                     //Console.WriteLine(index);
                 }
-                ///Console.WriteLine(ipHostInfo.AddressList[index]);
+                //Console.WriteLine(ipHostInfo.AddressList[index]);
             }
             #region Set IP/Port
             IPAddress ipAddress = ipHostInfo.AddressList[ip];
@@ -59,7 +59,6 @@ namespace DoroonNet.Command
             Socket listener = new Socket(ipAddress.AddressFamily,SocketType.Stream, ProtocolType.Tcp);
             ConSoPt.ConsoPrint("TCP Using " + ipAddress.ToString() + " " + localEndPoint);
             #endregion
-
             try
             {
                 listener.Bind(localEndPoint);
@@ -67,12 +66,10 @@ namespace DoroonNet.Command
                 listener.IOControl(IOControlCode.KeepAliveValues, KeepAlive(1, 1000, 1000), null);
                 while (true)
                 {
-                    allDone.Reset();
-                    // Start an asynchronous socket to listen for connections.  
+                    allDone.Reset(); // Start an asynchronous socket to listen for connections.  
                     ConSoPt.ConsoPrint("[Debug] " + "Waiting for a connection...");
-                    listener.BeginAccept(new AsyncCallback(AcceptCallback),listener);
-                    // Wait until a connection is made before continuing.  
-                    allDone.WaitOne();
+                    listener.BeginAccept(new AsyncCallback(AcceptCallback),listener);                    
+                    allDone.WaitOne();// Wait until a connection is made before continuing.  
                 }
 
             }
@@ -87,19 +84,16 @@ namespace DoroonNet.Command
 
         public static void AcceptCallback(IAsyncResult ar)
         {
-            allDone.Set();
-            // Get the socket that handles the client request.  
-            Socket listener = (Socket)ar.AsyncState;
+            allDone.Set();          
+            Socket listener = (Socket)ar.AsyncState;// Get the socket that handles the client request.  
             Socket handler = listener.EndAccept(ar);
-            // Create the state object.  
-            ConnectObject state = new ConnectObject();
+            ConnectObject state = new ConnectObject();// Create the state object.  
             state.workSocket = handler;
             handler.BeginReceive(state.buffer, 0, ConnectObject.BufferSize, 0,
                 new AsyncCallback(ReadCallback), state);
             ClientComp(handler);
             //ConSoPt.ConsoPrint("Client " + IPAddress.Parse(((IPEndPoint)handler.RemoteEndPoint).Address.ToString())
             //    + " on port " + ((IPEndPoint)handler.RemoteEndPoint).Port.ToString());
-
         }
 
         public static void ReadCallback(IAsyncResult ar)
@@ -207,11 +201,9 @@ namespace DoroonNet.Command
         private static void SendCallback(IAsyncResult ar)
         {
             try
-            {
-                // Retrieve the socket from the state object.  
-                Socket handler = (Socket)ar.AsyncState;
-                // Complete sending the data to the remote device.  
-                int bytesSent = handler.EndSend(ar);
+            {                
+                Socket handler = (Socket)ar.AsyncState;// Retrieve the socket from the state object.                 
+                int bytesSent = handler.EndSend(ar); // Complete sending the data to the remote device.  
                 Console.WriteLine("Sent {0} bytes to client.", bytesSent);
                 //handler.Shutdown(SocketShutdown.Both);
                 //handler.Close();
