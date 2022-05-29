@@ -1,2 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+# 忽略所有 db 目錄下附檔名是 .sqlite3 的檔案
+bin/

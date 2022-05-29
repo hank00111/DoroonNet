@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace DoroonNet.Resources
 {
     /// <summary>
@@ -27,43 +28,64 @@ namespace DoroonNet.Resources
         public static Label Label;
     }
 
-    public partial class M_DroneMarker : UserControl
+    public partial class M_DroneMarker
     {
         Popup Poup;
-        //Label Label;
+        Label _label;
         GMapMarker Marker;
-        DroneControl droneControl = new DroneControl();
+        //TextBlock textBlock;
+        //DroneControl droneControl = new DroneControl();
         public MainWindow MainWindow { get; }
         public static Image iaC { get; set; }        
 
-        public M_DroneMarker(MainWindow window, GMapMarker marker)
+        public M_DroneMarker(MainWindow window, GMapMarker marker ,int title)
         {
             InitializeComponent();
 
-            Poup = new Popup();
-            DroneControl.Label = new Label();
-
             iaC = icon;
-            this.MainWindow = window;
-            this.Marker = marker;
+            //Poup = new Popup();
+            //DroneControl.Label = new Label();
+            //_label = new Label();
+            //textBlock = new TextBlock(new Run(title));
+            //textBlock.Measure(new System.Windows.Size(double.PositiveInfinity, double.PositiveInfinity));
+            //textBlock.Arrange(new Rect(textBlock.DesiredSize));
+            //textBlock.Height = 30;
+            //textBlock.Width = 45;
+            //textBlock.Foreground = Brushes.Red;
+            //textBlock.FontSize = 40;
+
+            MainWindow = window;
+            Marker = marker;
+            Marker.Tag = title;
+            Poup = new Popup();
+            _label = new Label();
+            //textBlock = new TextBlock();
+
             this.Loaded += new RoutedEventHandler(M_DroneMarker_Loaded);
             this.Unloaded += new RoutedEventHandler(M_DroneMarker_Unloaded);
             this.SizeChanged += new SizeChangedEventHandler(M_DroneMarker_SizeChanged);
+            IdText.Text = title.ToString();
+            //textBlock.Text = "asd";
+            //textBlock.Height = 30;
+            //textBlock.Width = 45;
+            //textBlock.Foreground = Brushes.Red;
+            //textBlock.FontSize = 40;
+            //SolidColorBrush Background = new SolidColorBrush(Colors.Gray);//Color.FromArgb(100, 14, 255, 0)
+            //Background.Opacity = 0.7;
 
-            SolidColorBrush Background = new SolidColorBrush(Colors.Gray);//Color.FromArgb(100, 14, 255, 0)
-            Background.Opacity = 0.7;
+            //Poup.Placement = PlacementMode.Mouse;
+            //{
+            //    _label.Background = Background;
+            //    _label.Foreground = new SolidColorBrush(Color.FromArgb(255, 14, 255, 0));
+            //    _label.Padding = new Thickness(0, 0, -100, 100);
+            //    _label.FontSize = 16;
+            //    _label.FontWeight = FontWeights.Bold;
+            //    _label.Content = $"HDG {VariableRes.HDG} Lat {VariableRes.Lat} Lng {VariableRes.Lat}";
+            //}
+            //Poup.AllowsTransparency = true;
+            //Poup.Child = textBlock;
 
-            Poup.Placement = PlacementMode.Mouse;
-            {
-                DroneControl.Label.Background = Background;
-                DroneControl.Label.Foreground = new SolidColorBrush(Color.FromArgb(255, 14, 255, 0));
-                DroneControl.Label.Padding = new Thickness(0,0,-100,100);
-                DroneControl.Label.FontSize = 16;
-                DroneControl.Label.FontWeight = FontWeights.Bold;
-                DroneControl.Label.Content = $"HDG {VariableRes.HDG} Lat {VariableRes.Lat} Lng {VariableRes.Lat}"; 
-            }
-            Poup.AllowsTransparency = true;
-            Poup.Child = DroneControl.Label;
+
         }
 
         private void M_DroneMarker_Loaded(object sender, RoutedEventArgs e)
@@ -98,7 +120,7 @@ namespace DoroonNet.Resources
 
         private void M_DroneMarker_MouseLeave(object sender, MouseEventArgs e)
         {
-            Poup.IsOpen = false;
+            //Poup.IsOpen = false;
         }
     }
 

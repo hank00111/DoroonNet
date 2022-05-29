@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="DoroonNet.Views.QuickSettings"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DoroonNet.Views" 
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" FontFamily="Roboto" >
+    <ScrollViewer>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="TCP Server Host:" Foreground="White" FontSize="22" Height="40" Margin="5,0,10,0" Padding="0,5,0,0"/>
+                <ComboBox x:Name="ComboIP" FontSize="18" Width="256" Height="35" Style="{StaticResource MahApps.Styles.ComboBox}" Loaded="ComboIP_Loaded" SelectionChanged="ComboIP_SelectionChanged" Unloaded="ComboIP_Unloaded"/>
+                <TextBlock Text="TCP CurrentHost:" Foreground="White" FontSize="22" Padding="0,5,0,0" Margin="100,0,10,0"/>
+                <TextBlock x:Name="CurrentHostStr" Text="" Foreground="White" FontSize="22" Padding="0,5,0,0"/>
+            </StackPanel>            
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

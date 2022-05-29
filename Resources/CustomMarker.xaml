@@ -4,6 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DoroonNet.Resources"
-             Height="40" Width="40" Opacity="10">
-    <Image x:Name="icon"  Source="/Resources/Marker.png" Height="40" Width="40"/>
+             Height="40" Width="41" Opacity="10">
+    <Grid>
+        <Image x:Name="icon"  Source="/Resources/Marker.png" Height="40" Width="41"/>
+        <TextBlock x:Name="Txt" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="White" FontSize="15" FontWeight="Bold" Margin="20,0,0,0" Background="#59575757"/>
+    </Grid>
+
 </UserControl>

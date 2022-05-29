@@ -1,69 +1,84 @@
-﻿<UserControl x:Class="DoroonNet.Views.FlightInfo"
+﻿<UserControl
+             x:Class="DoroonNet.Views.FlightInfo"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:DoroonNet.Views" Foreground="{x:Null}">    
-    
-    <ScrollViewer>
-        <ListView x:Name="FlightList" ItemsSource="{Binding CollectionListPartial, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource ListView}" BorderBrush="{x:Null}" Background="{x:Null}"  SelectionChanged="ListView_SelectionChanged">
+             xmlns:local="clr-namespace:DoroonNet.Views" 
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" 
+             Foreground="{x:Null}">
+
+    <ScrollViewer mah:ScrollViewerHelper.IsHorizontalScrollWheelEnabled="True" HorizontalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" FontFamily="Roboto">
+        
+        <ListView x:Name="FlightList" ItemsSource="{Binding CollectionListPartial, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource ListView}" BorderBrush="{x:Null}" Background="{x:Null}"  SelectionChanged="ListView_SelectionChanged" mah:ScrollViewerHelper.IsHorizontalScrollWheelEnabled="True">
             <ListView.ItemContainerStyle>
-                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource  MahApps.Styles.ListBoxItem.HamburgerMenuItem}">
-                    <Setter Property="Background" Value="Transparent" />    
-                </Style>                
+                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MahApps.Styles.ListBoxItem.HamburgerMenuItem}">
+                    <Setter Property="Background" Value="Transparent" />
+                </Style>
             </ListView.ItemContainerStyle>
 
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="#FF171717" BorderThickness="1" Padding="10" Background="#7F747474" CornerRadius="5,5,5,5" Height="53">                        
+                    <Border BorderBrush="#FF171717" BorderThickness="1" Padding="10" Background="#7F747474" CornerRadius="5,5,5,5" Height="53">
                         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
                             <Grid.Resources>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="FontFamily" Value="Google Sans"/>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="FontFamily" Value="Roboto"/>
                                     <Setter Property="FontSize"  Value="17"/>
                                 </Style>
                             </Grid.Resources>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="22"/><!--id-->
-                                <ColumnDefinition Width="25"/><!--ID-->
-                                <ColumnDefinition Width="58"/><!--st-->
-                                <ColumnDefinition Width="75"/><!--ST-->
-                                <ColumnDefinition Width="48"/><!--hdg-->
-                                <ColumnDefinition Width="40" /><!--HDG-->
-                                <ColumnDefinition Width="40"/><!--spd-->
-                                <ColumnDefinition Width="58"/><!--SPD-->
-                                <ColumnDefinition Width="40"/><!--M/S-->
-                                <ColumnDefinition Width="35"/><!--alt-->
-                                <ColumnDefinition Width="68"/><!--ALT-->
+                                <ColumnDefinition Width="22"/>
+                                <!--id-->
+                                <ColumnDefinition Width="32"/>
+                                <!--ID-->
+                                <ColumnDefinition Width="58"/>
+                                <!--st-->
+                                <ColumnDefinition Width="75"/>
+                                <!--ST-->
+                                <ColumnDefinition Width="48"/>
+                                <!--hdg-->
+                                <ColumnDefinition Width="40" />
+                                <!--HDG-->
+                                <ColumnDefinition Width="40"/>
+                                <!--spd-->
+                                <ColumnDefinition Width="58"/>
+                                <!--SPD-->
+                                <ColumnDefinition Width="40"/>
+                                <!--M/S-->
+                                <ColumnDefinition Width="35"/>
+                                <!--alt-->
+                                <ColumnDefinition Width="68"/>
+                                <!--ALT-->
                                 <ColumnDefinition Width="20"/>
                                 <ColumnDefinition Width="48"/>
-                                <ColumnDefinition Width="110"/>
-                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition Width="44"/>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            
+
                             <TextBlock Grid.Column="0" Text="ID:" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
-                            <TextBlock Grid.Column="1" Text="{Binding ID,Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="White"/>
+                            <TextBlock Grid.Column="1" Text="{Binding ID, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="White"/>
                             <TextBlock Grid.Column="2" Text="LinkID:" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="White" />
-                            <TextBlock Grid.Column="3" Text="{Binding FlightID,Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#56cc56" />
+                            <TextBlock Grid.Column="3" Text="{Binding FlightID, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#56cc56" />
                             <TextBlock Grid.Column="4" Text="HDG:" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="White"/>
-                            <TextBlock Grid.Column="5" Text="{Binding FlightHDG,Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#56cc56"/>
+                            <TextBlock Grid.Column="5" Text="{Binding FlightHDG, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#56cc56"/>
                             <TextBlock Grid.Column="6" Text="SPD:" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="White"/>
-                            <TextBlock Grid.Column="7" Text="{Binding FlightSPD,Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="#56cc56"/>
+                            <TextBlock Grid.Column="7" Text="{Binding FlightSPD, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="#56cc56"/>
                             <TextBlock Grid.Column="8" Text="m/s"  HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#56cc56"/>
                             <TextBlock Grid.Column="9" Text="ALT:" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="White"/>
-                            <TextBlock Grid.Column="10" Text="{Binding FlightALT,Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="#56cc56"/>
+                            <TextBlock Grid.Column="10" Text="{Binding FlightALT, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="#56cc56"/>
                             <TextBlock Grid.Column="11" Text="m" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#56cc56"/>
                             <TextBlock Grid.Column="12" Text=" 緯度:" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="White"/>
-                            <TextBlock Grid.Column="13" Text="{Binding FlightLAT,Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#56cc56"/>
+                            <TextBlock Grid.Column="13" Text="{Binding FlightLAT, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#56cc56"/>
                             <TextBlock Grid.Column="14" Text="經度:" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="White"/>
-                            <TextBlock Grid.Column="15" Text="{Binding FlightLNG,Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#56cc56"/>
-                        </Grid>                       
+                            <TextBlock Grid.Column="15" Text="{Binding FlightLNG, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#56cc56"/>
+                        </Grid>
                     </Border>
                 </DataTemplate>
             </ListView.ItemTemplate>
-            
+
         </ListView>
-        
+
     </ScrollViewer>
 </UserControl>

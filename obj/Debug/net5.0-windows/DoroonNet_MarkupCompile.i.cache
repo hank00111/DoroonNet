@@ -1,5 +1,5 @@
 ﻿DoroonNet
-1.0.0.0
+1.0.2.1224
 
 exe
 C#
@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET5_0;NETCOREAPP
 E:\Program\DoroonNet\App.xaml
-10-1378832274
+15154844344
 
-24-838232453
-2361628040981
-MainWindow.xaml;Resources\CustomMarker.xaml;Resources\CustomThemes.xaml;Resources\GroundMarker.xaml;Resources\ListView.xaml;Resources\M_DroneMarker.xaml;Views\FlightInfo.xaml;Views\FlightInfoRight.xaml;Views\LiveChart.xaml;Views\XYZChart.xaml;
+34-1765307965
+219-1706899329
+DoroonDB\DBHome.xaml;MainWindow.xaml;NavView\Nav.xaml;Resources\CustomMarker.xaml;Resources\GroundMarker.xaml;Resources\ListView.xaml;Resources\M_DroneMarker.xaml;Resources\NavMarker.xaml;RouteView\RtView.xaml;Views\FlightInfo.xaml;Views\FlightInfoRight.xaml;Views\LiveChart.xaml;Views\QuickSettings.xaml;Views\SYS.xaml;Views\XYZChart.xaml;
 
-True
+False
 

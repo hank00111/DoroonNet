@@ -5,7 +5,7 @@
   },
   "projects": {
     "E:\\Program\\DoroonNet\\DoroonNet.csproj": {
-      "version": "1.0.0",
+      "version": "1.0.2.1224",
       "restore": {
         "projectUniqueName": "E:\\Program\\DoroonNet\\DoroonNet.csproj",
         "projectName": "DoroonNet",
@@ -45,17 +45,25 @@
         "net5.0-windows7.0": {
           "targetAlias": "net5.0-windows",
           "dependencies": {
-            "Caliburn.Micro": {
+            "CsvHelper": {
               "target": "Package",
-              "version": "[4.0.173, )"
+              "version": "[27.2.1, )"
             },
             "GMap.NET.WinPresentation": {
               "target": "Package",
               "version": "[2.0.2, )"
             },
+            "Geolocation": {
+              "target": "Package",
+              "version": "[1.2.1, )"
+            },
             "MahApps.Metro": {
               "target": "Package",
               "version": "[2.4.7, )"
+            },
+            "MaterialDesignThemes": {
+              "target": "Package",
+              "version": "[4.2.1, )"
             },
             "ScottPlot": {
               "target": "Package",

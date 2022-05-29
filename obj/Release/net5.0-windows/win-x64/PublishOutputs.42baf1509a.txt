@@ -1,0 +1,4 @@
+E:\Program\DoroonNet\bin\Release\net5.0-windows\publish\DoroonNet.pdb
+E:\Program\DoroonNet\bin\Release\net5.0-windows\publish\sni.dll
+E:\Program\DoroonNet\bin\Release\net5.0-windows\publish\SQLite.Interop.dll
+E:\Program\DoroonNet\bin\Release\net5.0-windows\publish\DoroonNet.exe

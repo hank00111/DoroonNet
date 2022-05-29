@@ -1,12 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup />
+  <PropertyGroup>
+    <_LastSelectedProfileId>E:\Program\DoroonNet\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
+  </PropertyGroup>
   <ItemGroup>
     <ApplicationDefinition Update="App.xaml">
       <SubType>Designer</SubType>
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="DoroonDB\DBHome.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="NavView\Nav.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Resources\CustomMarker.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -14,6 +22,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Resources\M_DroneMarker.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Resources\NavMarker.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="RouteView\RtView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\FlightInfo.xaml.cs">
@@ -25,18 +39,27 @@
     <Compile Update="Views\LiveChart.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\QuickSettings.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\SYS.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\XYZChart.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="DoroonDB\DBHome.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Resources\CustomMarker.xaml">
+    <Page Update="NavView\Nav.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Resources\CustomThemes.xaml">
+    <Page Update="Resources\CustomMarker.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Resources\GroundMarker.xaml">
@@ -48,6 +71,12 @@
     <Page Update="Resources\M_DroneMarker.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Resources\NavMarker.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="RouteView\RtView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\FlightInfo.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -55,6 +84,12 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\LiveChart.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\QuickSettings.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\SYS.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\XYZChart.xaml">

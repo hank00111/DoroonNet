@@ -1,4 +1,5 @@
 ﻿using DoroonNet.ViewModel;
+using GMap.NET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -107,5 +108,55 @@ namespace DoroonNet.Command
                 OnPropertyChanged("FlightLNG");
             }
         }
+
+        private static int flightBAT { get; set; }
+        public int FlightBAT
+        {
+            get
+            {
+                return flightBAT;
+            }
+            set
+            {
+                flightBAT = value;
+                OnPropertyChanged("FlightBAT");
+            }
+        }
+
+    }
+    public class FlightDataL : NotifyImplementClass
+    { 
+        public int ID { get; set; }
+        public string FlightID { get; set; }
+        public int FlightHDG { get; set; }
+        public float FlightSPD { get; set; }
+        public float FlightALT { get; set; }
+        public double FlightLAT { get; set; }
+        public double FlightLNG { get; set; }
+    }
+
+    public class NavData : NotifyImplementClass
+    {
+        public int ID { get; set; }
+        public float SPD { get; set; }
+        public float ALT { get; set; }
+        //public double LAT { get; set; }
+        //public double LNG { get; set; }
+        public PointLatLng NavPt { get; set; }
+
+        public static List<NavData> NavList = new List<NavData>();
+
+        //public System.Collections.ObjectModel.ObservableCollection<NavData> navList;
+
+        //public System.Collections.ObjectModel.ObservableCollection<NavData> NavList
+        //{
+        //    get { return navList; }
+        //    set
+        //    {
+        //        navList = value;
+        //        RaisePropertyChanged("NavList");
+        //    }
+
+        //}
     }
 }

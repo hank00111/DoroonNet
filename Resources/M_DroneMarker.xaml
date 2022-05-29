@@ -4,17 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DoroonNet.Resources"
-             Height="28" Width="28" MouseEnter="M_DroneMarker_MouseEnter" MouseLeave="M_DroneMarker_MouseLeave">
-    <Image x:Name="icon" Height="28" Width="28">
-        <Image.Source>
-            <DrawingImage>
-                <DrawingImage.Drawing>
-                    <DrawingGroup>
-                        <GeometryDrawing Brush="Red" Geometry="m249.176 3.656-203.511 499.491c-2.15 5.277 3.719 10.215 8.551 7.195l198.3-123.961c1.268-.793 2.877-.796 4.148-.009l200.478 124.057c4.843 2.997 10.687-1.962 8.52-7.228l-205.618-499.564c-2-4.859-8.885-4.846-10.868.019z"/>
-                    </DrawingGroup>
-                </DrawingImage.Drawing>
-            </DrawingImage>
-        </Image.Source>
-    </Image>
+              MouseEnter="M_DroneMarker_MouseEnter" MouseLeave="M_DroneMarker_MouseLeave">
+    <Grid>        
+        <Image x:Name="icon" Height="30" Width="30">
+            <Image.Source>
+                <DrawingImage>
+                    <DrawingImage.Drawing>
+                        <DrawingGroup>
+                            <GeometryDrawing Brush="Red" Geometry="m249.176 3.656-203.511 499.491c-2.15 5.277 3.719 10.215 8.551 7.195l198.3-123.961c1.268-.793 2.877-.796 4.148-.009l200.478 124.057c4.843 2.997 10.687-1.962 8.52-7.228l-205.618-499.564c-2-4.859-8.885-4.846-10.868.019z"/>
+                        </DrawingGroup>
+                    </DrawingImage.Drawing>
+                </DrawingImage>
+            </Image.Source>
+        </Image>
+        <TextBlock x:Name="IdText" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="14" FontWeight="Bold"/>
+    </Grid>
     
 </UserControl>

@@ -1,11 +1,11 @@
-﻿<UserControl
+﻿<UserControl x:Class="DoroonNet.Views.FlightInfoRight"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DoroonNet.Views"
-             xmlns:Data="clr-namespace:DoroonNet.Command" xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" x:Class="DoroonNet.Views.FlightInfoRight"
-             >
+             xmlns:Data="clr-namespace:DoroonNet.Command" 
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls">
     <Grid Grid.Column ="1">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -14,12 +14,38 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="AUTO"/>
             <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock x:Name="ImageShowID" Text="{Binding ImageID, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" FontSize="14" HorizontalAlignment="Center" FontFamily="Google Sans"/>
-        <TextBlock x:Name="DataShowID" Text="{Binding DataID, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=Explicit}" FontSize="14" Grid.Column="1" HorizontalAlignment="Center" FontFamily="Google Sans"/>
-        <Button Grid.Row="2" Content="Send_Test" MaxWidth="58" MaxHeight="30" Click="Button_Click" FontWeight="Bold" mah:ControlsHelper.ContentCharacterCasing="Normal" Visibility="Hidden" />
+        <TextBlock x:Name="ImageShowID" Text="{Binding ImageID, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" FontSize="14" HorizontalAlignment="Center" FontFamily="Roboto" Foreground="Wheat" Visibility="Collapsed"/>
+        <TextBlock x:Name="DataShowID" Text="{Binding DataID, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=Explicit}" FontSize="14" Grid.Column="1" HorizontalAlignment="Center" FontFamily="Roboto" Foreground="Wheat" Visibility="Collapsed"/>
+        <Label x:Name="CurrentSel" Grid.Row="0" Grid.Column="0" Content="當前選擇:" HorizontalAlignment="Center"/>
+        <ComboBox x:Name="UavCombo" Grid.Row="0" Grid.Column="1" Style="{DynamicResource MahApps.Styles.ComboBox}" Margin="0,0,0,2"/>
+        <Button Grid.Row="1" Grid.Column="0" Content="TAKEOFF" Click="TAKEOFF_Click" FontWeight="Bold" />
+        <Button Grid.Row="1" Grid.Column="1" Content="LANDING" Click="LANDING_Click" FontWeight="Bold"/>
+        <Button Grid.Row="2" Grid.Column="0" Content="CAM Open" Click="CAM_ON_Click" FontWeight="Bold"/>
+        <Button Grid.Row="2" Grid.Column="1" Content="CAM Close" Click="CAM_OFF_Click" FontWeight="Bold"/>
+        <ListView Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="2" ItemsSource="{Binding CollectionListPartial, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" >            
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel.Resources>
+                            <Style TargetType="{x:Type Label}">
+                                <Setter Property="FontFamily" Value="Consolas"/>
+                                <Setter Property="FontSize"  Value="16"/>
+                                <Setter Property="Foreground"  Value="White"/>
+                            </Style>
+                        </StackPanel.Resources>
+                        <Label Content="ID:"/>
+                        <Label Content="{Binding FlightID, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
+                        <Label Content="電量:"/>
+                        <Label Content="{Binding FlightBAT, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
+                        <Label Content="%"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 
     </Grid>
 </UserControl>

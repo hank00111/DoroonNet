@@ -9,19 +9,28 @@
         xmlns:uc="clr-namespace:DoroonNet.Views"
         xmlns:gmaps="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation" 
         xmlns:i="clr-namespace:System.Windows.Interop;assembly=PresentationCore" 
-        xmlns:cm="http://caliburnmicro.com" 
         x:Class="DoroonNet.MainWindow"
         mc:Ignorable="d"
-        Height="720" Width="1600" mah:ControlsHelper.ContentCharacterCasing="Normal" MinWidth="800" MinHeight="480" Title="Doroon"
-        WindowStartupLocation="CenterScreen"  WindowState="Maximized" KeyDown="Window_KeyDown" KeyUp="Window_Keyup">
-
+        Height="720" Width="1600" 
+        mah:ControlsHelper.ContentCharacterCasing="Normal" MinWidth="800" MinHeight="480" Title="DroneNET"
+        WindowStartupLocation="CenterScreen"  WindowState="Maximized" KeyDown="Window_KeyDown" KeyUp="Window_Keyup" Closing="MetroWindow_Closing">
+    <mah:MetroWindow.Resources>
+        <SolidColorBrush x:Key="MahApps.Brushes.MenuItem.SelectionFill" Color="White" />
+    </mah:MetroWindow.Resources>    
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <!--#region Toolbar-->
-        <Grid Grid.Row="0"  Background="#FF878080" VerticalAlignment="Stretch"/>
+        <Grid Grid.Row="0"  VerticalAlignment="Stretch">
+            <Menu Background="#3D4C51" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsMainMenu="True">
+                <MenuItem x:Name="MenuView" Header="路徑規劃" Margin="1" Foreground="White" Height="30" IsEnabled="True"  Click="MenuView_Click"/>
+                <MenuItem x:Name="DatabasMenu" Header="資料庫" Margin="1" Foreground="White" Height="30" Click="DatabasMenu_Click"/>
+                <MenuItem x:Name="SystemView" Header="系統狀態" Margin="1" Foreground="White" Height="30" Click="SystemView_Click"/>
+            </Menu>
+            
+        </Grid>
         <!--#endregion-->
 
         <Grid Grid.Row="1" x:Name="main_Grid" SizeChanged="Grid_SizeChanged" VerticalAlignment="Stretch">
@@ -36,38 +45,43 @@
                     <RowDefinition Height="1.9*"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-
-                <!--#endregion-->
-
-                <!--#endregion-->
-
-                <!--#endregion-->
                 <!--#region GMap -->
                 <gmaps:GMapControl Grid.Row="0" x:Name="MainMap" Panel.ZIndex="0" Loaded="MainMap_Loaded" MouseMove="MainMap_MouseMove" MouseLeftButtonDown="MainMap_MouseLeftButtonDown" />
+                <!--#endregion-->
 
                 <!--#region OnGmapFps-->
                 <Grid Grid.Row="0" Height="30"  Width="320" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="4,2,0,0">
                     <TextBlock Text="FPS:" Foreground="#FF0EFF00" FontWeight="Bold" FontFamily="Google Sans" FontSize="24">
                         <InlineUIContainer>
-                            <TextBlock x:Name="FPS_text" Text="{Binding FpsCount, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Foreground="#FF0EFF00" FontWeight="Bold" FontFamily="Google Sans" FontSize="24"/>
+                            <TextBlock x:Name="FPS_text" Text="{Binding FpsCount, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Foreground="#FF0EFF00" FontWeight="Bold" FontFamily="Roboto" FontSize="24"/>
                         </InlineUIContainer>
                     </TextBlock>
                 </Grid>
+                <!--#endregion-->
 
+                <Grid Grid.Row="0"  Width="215" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,2,2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="ModeMap" Grid.Column="0" Content="Map Mode" Foreground="WhiteSmoke" Background="#FF6B4423" VerticalAlignment="Center" BorderBrush="#FF515151" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" BorderThickness="1,3,0.5,1" FontFamily="Roboto" FontSize="18"  Click="ModeMap_Click"/>
+                    <Button x:Name="ModeEdit" Grid.Column="1" Content="Edit Mode" Foreground="#FFBDBDBD" Background="#7F6B4423" VerticalAlignment="Center" BorderBrush="#FF515151" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" BorderThickness="1,3,1,1" FontFamily="Roboto" FontSize="18" Click="ModeEdit_Click"/>
+                </Grid>
+                
                 <!--#region Info-->
-                <Border Grid.Row="1" Background="#FF21272F" BorderBrush="#FF7A7070" BorderThickness="0,0,1,0">
+                <Border Grid.Row="1" Background="#00131a" BorderBrush="#FF7A7070" BorderThickness="0,0,1,0">
                     <Grid>
                         <mah:DateTimePicker  HorizontalAlignment="Right" VerticalAlignment="Top" Height="38" Foreground="White" Background="{x:Null}" BorderBrush="{x:Null}" Culture="zh-TW" FontSize="13" IsClockVisible="False" >
                             <j:Interaction.Behaviors>
                                 <behaviors:DateTimeNow />
                             </j:Interaction.Behaviors>
                         </mah:DateTimePicker>
-              
-                        <TabControl Background="#FF21272F" mah:TabControlHelper.Underlined="TabPanel" mah:HeaderedControlHelper.HeaderFontSize="24" >
-                            <TabItem Header="資訊"  IsSelected="True" mah:HeaderedControlHelper.HeaderFontStretch="Normal" mah:HeaderedControlHelper.HeaderFontWeight="Normal" mah:HeaderedControlHelper.HeaderFontFamily="Microsoft YaHei UI">
+
+                        <TabControl x:Name="TabInfo" Background="#00131a" mah:TabControlHelper.Underlined="TabPanel" mah:HeaderedControlHelper.HeaderFontSize="24" SelectionChanged="TabControl_SelectionChanged" >
+                            <TabItem Header="資訊"  IsSelected="True" mah:HeaderedControlHelper.HeaderFontStretch="Normal" mah:HeaderedControlHelper.HeaderFontWeight="Normal" mah:HeaderedControlHelper.HeaderFontFamily="Roboto Medium">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2.5*"/>
+                                        <ColumnDefinition Width="3*"/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     
@@ -75,25 +89,28 @@
                                     <uc:FlightInfoRight Grid.Column ="1"/>
                                 </Grid>
                             </TabItem>
-                            <TabItem Header="設定" mah:HeaderedControlHelper.HeaderFontStretch="Normal" mah:ControlsHelper.ContentCharacterCasing="Normal" mah:HeaderedControlHelper.HeaderFontWeight="Normal" mah:HeaderedControlHelper.HeaderFontFamily="Microsoft YaHei UI"/>
+                            <TabItem Header="快速設定" mah:HeaderedControlHelper.HeaderFontStretch="Normal" mah:ControlsHelper.ContentCharacterCasing="Normal" mah:HeaderedControlHelper.HeaderFontWeight="Normal" mah:HeaderedControlHelper.HeaderFontFamily="Roboto Medium">
+                                <uc:QuickSettings/>
+                            </TabItem>
                         </TabControl>
                     </Grid>
                 </Border>
+                <!--#endregion-->
             </Grid>
             <!--#endregion-->
 
             <!--#region Right-->
-            <Grid Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Stretch"  MinHeight="680" Width="640" Background="#FF21272F">
+            <Grid Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Stretch"  MinHeight="680" Width="640" Background="#00131a">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="360"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <!--#endregion-->
-
-                <!--#endregion-->
+                
                 <!--#region IMG-->
                 <Grid x:Name="Image_grid" Grid.Row="0" Background="#FF212020" Height="360" VerticalAlignment="Top">
-                    <Image x:Name="icon" Height="28" Width="28">
+                    <Label Content="NO SIGNL" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" FontFamily="Consolas" FontWeight="Bold"/>
+                    <!--<Image x:Name="icon" Height="28" Width="28">
                         <Image.Source>
                             <DrawingImage>
                                 <DrawingImage.Drawing >
@@ -101,11 +118,12 @@
                                 </DrawingImage.Drawing>
                             </DrawingImage>
                         </Image.Source>
-                    </Image>
-                    <Border x:Name="Image_border"  BorderBrush="White" BorderThickness="1,1,1,1" >
+                    </Image>-->
+                    <Border x:Name="Image_border"  BorderBrush="#3D4C51" BorderThickness="1,1,1,1" >
                         <Image x:Name="Imgavdio" Width="640" Height="360"/>
                     </Border>
                 </Grid>
+                <!--#endregion-->
                 <!--#region MoreInfo-->
                 <Grid x:Name="Chart" Grid.Row="1" VerticalAlignment="Stretch">
                     <uc:XYZChart/>

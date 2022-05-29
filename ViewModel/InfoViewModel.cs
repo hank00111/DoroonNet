@@ -33,9 +33,7 @@ namespace DoroonNet.ViewModel
                     FlightID= "#",
                     FlightHDG = 0,
                     FlightSPD = 0.01f,
-                    FlightALT = 0.01f,
-                    FlightLAT = 25.1230011,
-                    FlightLNG = 121.1150011
+                    FlightALT = 0.01f
                 }
             };
         }

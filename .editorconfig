@@ -2,3 +2,6 @@
 
 # CS0649: 從未指派欄位 'MainWindow.CurrentElement'，會持續使用其預設值 null
 dotnet_diagnostic.CS0649.severity = none
+
+# CA2200: 重新擲回以保存堆疊詳細資料
+dotnet_diagnostic.CA2200.severity = none

@@ -36,7 +36,7 @@ namespace DoroonNet.Resources
         MarkerControl markerControl = new MarkerControl();
         //Popup Popupp;
 
-        public CustomMarker(MainWindow window, GMapMarker marker, string title)
+        public CustomMarker(MainWindow window, GMapMarker marker, string NavPt, int NavCount)
         {
             InitializeComponent();
             
@@ -54,6 +54,7 @@ namespace DoroonNet.Resources
             this.MouseMove += new MouseEventHandler(CustomMarker_MouseMove);
             this.MouseLeftButtonUp += new MouseButtonEventHandler(CustomMarker_MouseLeftButtonUp);
             this.MouseLeftButtonDown += new MouseButtonEventHandler(CustomMarker_MouseLeftButtonDown);
+            Txt.Text = NavCount.ToString();
 
             markerControl.Popup.Placement = PlacementMode.Mouse;
             {
@@ -61,7 +62,7 @@ namespace DoroonNet.Resources
                 Label.Foreground = Brushes.White;                
                 Label.Padding = new Thickness(5);
                 Label.FontSize = 12;
-                Label.Content = title;
+                Label.Content = NavPt;
             }
             markerControl.Popup.Child = Label;
 
@@ -136,7 +137,7 @@ namespace DoroonNet.Resources
 
             markerControl.Popup.IsOpen = true;
             //Popupp.IsOpen = true;
-            Console.WriteLine(VariableRes.ifDel);
+            //Console.WriteLine(VariableRes.ifDel);
 
         }
 
