@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GMap.NET;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
@@ -93,9 +94,12 @@ namespace DoroonNet.DoroonDB
     {
         SQLiteConnection sqlite_conn;
         public bool IsRun = false;
+        public delegate List<PointLatLng> DelegateFlightDataGPS( int ID);
+        public static DelegateFlightDataGPS DelegateFlightDataGPSObj;
         public DoroonSQLLiteDB()
         {
             CreateConnection();
+            DelegateFlightDataGPSObj = GetFlightDataGPS;
         }
 
         void CreateConnection()
@@ -211,14 +215,15 @@ namespace DoroonNet.DoroonDB
             try
             {
                 sqlite_cmd.ExecuteNonQuery();
+                FlightID = sqlite_conn.LastInsertRowId;
+                transaction.Commit();
             } 
             catch (Exception ex)
             {
                 Console.WriteLine(GetDBQueryExtraInfo(System.Reflection.MethodBase.GetCurrentMethod().Name, "ExecuteNonQuery", sqlite_cmd), ex);
                 throw ex;
             }
-            FlightID = sqlite_conn.LastInsertRowId;
-            transaction.Commit();
+      
 
             return Convert.ToInt32(FlightID);
         }
@@ -324,7 +329,7 @@ namespace DoroonNet.DoroonDB
                         TimeSpan ts = stopWatch.Elapsed;
                         string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Minutes, ts.Seconds, ts.Milliseconds, ts.Ticks);
 
-                        Console.WriteLine("in {0} {1} RunTime:{2}", DateTime.Now.ToString("HH:mm:ss:fff"), IdicFlightData.Count, elapsedTime);
+                        Console.WriteLine("[DBinfo]RunTime:{0} Total:{1} Date:{2}", elapsedTime, IdicFlightData.Count, DateTime.Now.ToString("HH:mm:ss:fff"));
                         //transaction.Commit();
                         IsRun = true;
                     }
@@ -500,6 +505,35 @@ namespace DoroonNet.DoroonDB
             }
 
             return FlightData;
+        }
+
+        public List<PointLatLng> GetFlightDataGPS(int WhereID)
+        {
+            List<PointLatLng> FlightDataGPS = new List<PointLatLng>();
+            SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand(); 
+            string Selectsql;
+            Selectsql = $"SELECT latitude, longitude FROM FlightDatas WHERE FlightID={WhereID} ORDER BY FlightDatasID ASC";
+            sqlite_cmd.CommandText = Selectsql;
+            try
+            {
+                SQLiteDataReader r = sqlite_cmd.ExecuteReader();
+
+                while (r.Read())
+                {
+                    PointLatLng data = new PointLatLng
+                    {
+                        Lat = r.GetDouble(0),
+                        Lng = r.GetDouble(1)         
+                    };
+                    FlightDataGPS.Add(data);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(GetDBQueryExtraInfo(System.Reflection.MethodBase.GetCurrentMethod().Name, "ExecuteReader", sqlite_cmd), ex);
+                throw ex;
+            }
+            return FlightDataGPS;
         }
 
         public List<TableListData> GetAllTables()

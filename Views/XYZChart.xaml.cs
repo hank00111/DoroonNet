@@ -35,7 +35,7 @@ namespace DoroonNet.Views
             cPlot1, cPlot2, cPlot3;
         public static int nextDataIndex = 0;
         int i = 0;
-        //bool running = false;
+
 
         #region DataArry
         const int DataCount = 3040;//
@@ -390,10 +390,10 @@ namespace DoroonNet.Views
 
         private void Expander_Collapsed(object sender, RoutedEventArgs e)
         {
-            //_updateDataTimer?.Stop();
-            //_updateDataTimer1?.Stop();
-            //_updateDataTimer2?.Stop();
-            //_renderTimer?.Stop();
+            _updateDataTimer?.Stop();
+            _updateDataTimer1?.Stop();
+            _updateDataTimer2?.Stop();
+            _renderTimer?.Stop();
             //_renderTimer1?.Stop();
             //_renderTimer2?.Stop();
             //RenderTime.Stop();

@@ -2,6 +2,7 @@
 using DoroonNet.ViewModel;
 using DoroonNet.Views;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,6 +30,12 @@ namespace DoroonNet.Command
         public double[,] Gdata1 = new double[3, 4000];
     }
 
+    public class SocketClients
+    {
+        public int id { get; set; }
+        public Socket socket { get; set; }
+    }
+
     public class TcpServer
     {
         static Socket listener;
@@ -46,9 +53,11 @@ namespace DoroonNet.Command
         static string LogPath = SysDir + @"\Log\";
         static string TcpHost = Properties.Settings.Default.TCPHost;
         static string SysOpen = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss-fffff");
+        static Hashtable map = new Hashtable();
         static Dictionary<string, DBFlightData> dicFlightData = new Dictionary<string, DBFlightData>();
         public static List<FlightDataL> CLP = new List<FlightDataL>();
         public static List<Socket> Clients = new List<Socket>();
+        public static List<SocketClients> Clisents = new List<SocketClients>();
         public static List<IPAddress> NetIPs = new List<IPAddress>();  
         public static int MapClients = 0;
         public static int LinkID;
@@ -139,10 +148,10 @@ namespace DoroonNet.Command
                     //ID(((IPEndPoint)handler.RemoteEndPoint).Port);
                     //NewCurrentMoveClients = ((IPEndPoint)handler.RemoteEndPoint).Port;
 
-                    if (bytesRead == 70 && BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("30"))
+                    if (bytesRead == 71 && BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("30"))
                     {
-                        int ClientDataCheck = Clients.IndexOf(Clients.FirstOrDefault(X => X.RemoteEndPoint == handler.RemoteEndPoint));
-                        LinkID = ((IPEndPoint)handler.RemoteEndPoint).Port;
+                        int ClientDataCheck = Clients.FindIndex(X => X.RemoteEndPoint == handler.RemoteEndPoint);
+                        //LinkID = ((IPEndPoint)handler.RemoteEndPoint).Port;
  
                         CurrentMoveClients = ClientDataCheck;
                         if (ClientDataCheck == XYZChart.SelClient) WaveDataConvert(ClientDataCheck, memStream.ToArray());
@@ -151,14 +160,15 @@ namespace DoroonNet.Command
                         if (FlightList != null && ClientDataCheck != -1)
                         {
                             int CurrentFlightID = FlightList.IndexOf(FlightList.FirstOrDefault(X => int.Parse(X.linkid) == ((IPEndPoint)handler.RemoteEndPoint).Port)) + 1;
-                            FlightDataConvert(CurrentFlightID, ClientDataCheck, memStream.ToArray());
+                            //byte[] Data = memStream.ToArray();
+                            FlightDataConvert(handler, memStream.ToArray());
                         }
                         RecvCount += 1;
                         //Console.WriteLine("STAR "+BitConverter.ToString(memStream.ToArray())+" END");
 
                         memStream.SetLength(0);
                     }
-                    else if (bytesRead > 70 && BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("30"))
+                    else if (bytesRead > 71 && BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("30"))
                     {
                         //Console.WriteLine("URA " + memStream.Length);
                         RecvCount += 1;
@@ -168,6 +178,7 @@ namespace DoroonNet.Command
                     {
                         LossCount += 1;
                         RecvCount -= 1;
+                        Console.WriteLine("Data Error");
                     }
                     memStream.SetLength(0);
                     //Console.WriteLine("STAR " + BitConverter.ToString(memStream.ToArray()) + " END");
@@ -194,23 +205,7 @@ namespace DoroonNet.Command
             catch (Exception e)
             {
                 ClinetDel(handler);
-                //XYZChart.IsDisconnect = true;
-                //int DisClient = Clients.IndexOf(Clients.FirstOrDefault(X => X.RemoteEndPoint == handler.RemoteEndPoint));
-                //if (Clients.Count < XYZChart.SelClient + 1)
-                //{
-                //    XYZChart.SelClient = Clients.Count - 1;
-                //}
-                //if (DisClient != -1 && DisClient < ins.CollectionListPartial.Count)
-                //{
-                //    Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                //    {
-                //        ins.CollectionListPartial.RemoveAt(DisClient);
-                //    });
-                //}
-                //FlightInfoRightCommand FIRC = new FlightInfoRightCommand() { DataID = "" };
-                //Clients.Remove(handler);
-                //MapClients -= 1;
-                //Console.WriteLine(e.ToString() + " " + ((IPEndPoint)handler.RemoteEndPoint).Port.ToString());
+
             }
 
 
@@ -392,13 +387,13 @@ namespace DoroonNet.Command
         private static void WaveDataConvert(int CurrentID, byte[] WaveByte)
         {
             XYZChart.IsDisconnect = false;
-            //int ID = BitConverter.ToInt16(WaveByte.Skip(70).Take(4).ToArray(), 0);
-            if (WaveByte.Length > 70)
+            //int ID = BitConverter.ToInt16(WaveByte.Skip(71).Take(4).ToArray(), 0);
+            if (WaveByte.Length > 71)
             {
 
                 //Console.WriteLine("ID " + CurrentID + " Byte ID" + ID);
             }
-            if (WaveByte.Length == 70)
+            if (WaveByte.Length == 71)
             {
                 //GData data = new GData();
                 //data.Gdata1
@@ -415,99 +410,101 @@ namespace DoroonNet.Command
             //Console.WriteLine("ID " + CurrentID);
             //WaveByte = null;
         }
-        public static async void FlightDataConvert(int CurrentID, int selClient, byte[] LatLngByte)
+        public static async void FlightDataConvert(Socket handler, byte[] LatLngByte)
         {
             XYZChart.IsDisconnect = false;
             try
             {
-                if (selClient != -1 && LatLngByte.Length == 70 && LatLngByte != null
-                && ins.CollectionListPartial.Count > selClient)
+       
+                if (LatLngByte.Length == 71 && LatLngByte != null)
                 {
-                    float X = BitConverter.ToSingle(LatLngByte.Skip(1).Take(4).ToArray(), 0);
-                    float Y = BitConverter.ToSingle(LatLngByte.Skip(5).Take(4).ToArray(), 0);
-                    float Z = BitConverter.ToSingle(LatLngByte.Skip(9).Take(4).ToArray(), 0);
-                    float X1 = BitConverter.ToSingle(LatLngByte.Skip(13).Take(4).ToArray(), 0);
-                    float Y1 = BitConverter.ToSingle(LatLngByte.Skip(17).Take(4).ToArray(), 0);
-                    float Z1 = BitConverter.ToSingle(LatLngByte.Skip(21).Take(4).ToArray(), 0);
-                    float X2 = BitConverter.ToSingle(LatLngByte.Skip(25).Take(4).ToArray(), 0);
-                    float Y2 = BitConverter.ToSingle(LatLngByte.Skip(29).Take(4).ToArray(), 0);
-                    float Z2 = BitConverter.ToSingle(LatLngByte.Skip(33).Take(4).ToArray(), 0);
-                    int HDG = BitConverter.ToInt32(LatLngByte.Skip(37).Take(4).ToArray(), 0);
-                    float SPD = MathF.Round(BitConverter.ToSingle(LatLngByte.Skip(41).Take(4).ToArray(), 0), 2);//
-                    float ALT = MathF.Round(BitConverter.ToSingle(LatLngByte.Skip(45).Take(4).ToArray(), 0), 2);
-                    double LAT = Math.Round(BitConverter.ToDouble(LatLngByte.Skip(49).Take(8).ToArray(), 0), 12);
-                    double LNG = Math.Round(BitConverter.ToDouble(LatLngByte.Skip(57).Take(8).ToArray(), 0), 12);
-                    int BAT = BitConverter.ToInt32(LatLngByte.Skip(65).Take(4).ToArray());
-                    DBFlightData f = new DBFlightData
+                    byte id = LatLngByte[69];
+                    int selClient = Clisents.FindIndex(X => X.id == id);
+                    if (id == selClient)
                     {
-                        FlightID = CurrentID,
-                        latitude = LAT,
-                        longitude = LNG,
-                        altitude = ALT,
-                        groundspeed = SPD,
-                        heading = HDG,
-                        X = X,
-                        Y = Y,
-                        Z = Z,
-                        X1 = X1,
-                        Y1 = Y1,
-                        Z1 = Z1,
-                        X2 = X2,
-                        Y2 = Y2,
-                        Z2 = Z2,
-                        datetimestamp = DateTime.Now.Ticks
-                    };
+                        List<FlightListData> FindID = FlightList.FindAll(x => int.Parse(x.linkid) == ((IPEndPoint)Clisents[selClient].socket.RemoteEndPoint).Port);
+                        int CurrentID = FindID[FindID.Count - 1].FlightID;
 
-                    //FlightPathData data = new FlightPathData();
-                    //Task task2 = Task.Run(() => DoroonDB.WriteFlightPoint(CurrentID, LAT, LNG, ALT, SPD, HDG, X, Y, Z, X1, Y1, Z1, X2, Y2, Z2));
-                    //DoroonDB.WriteFlightPointV2(CurrentID, LAT, LNG, ALT, SPD, HDG, X, Y, Z, X1, Y1, Z1, X2, Y2, Z2);
-                    await Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                    {
-                        try
+                        float X = BitConverter.ToSingle(LatLngByte.Skip(1).Take(4).ToArray(), 0);
+                        float Y = BitConverter.ToSingle(LatLngByte.Skip(5).Take(4).ToArray(), 0);
+                        float Z = BitConverter.ToSingle(LatLngByte.Skip(9).Take(4).ToArray(), 0);
+                        float X1 = BitConverter.ToSingle(LatLngByte.Skip(13).Take(4).ToArray(), 0);
+                        float Y1 = BitConverter.ToSingle(LatLngByte.Skip(17).Take(4).ToArray(), 0);
+                        float Z1 = BitConverter.ToSingle(LatLngByte.Skip(21).Take(4).ToArray(), 0);
+                        float X2 = BitConverter.ToSingle(LatLngByte.Skip(25).Take(4).ToArray(), 0);
+                        float Y2 = BitConverter.ToSingle(LatLngByte.Skip(29).Take(4).ToArray(), 0);
+                        float Z2 = BitConverter.ToSingle(LatLngByte.Skip(33).Take(4).ToArray(), 0);
+                        int HDG = BitConverter.ToInt32(LatLngByte.Skip(37).Take(4).ToArray(), 0);
+                        float SPD = MathF.Round(BitConverter.ToSingle(LatLngByte.Skip(41).Take(4).ToArray(), 0), 2);//
+                        float ALT = MathF.Round(BitConverter.ToSingle(LatLngByte.Skip(45).Take(4).ToArray(), 0), 2);
+                        double LAT = Math.Round(BitConverter.ToDouble(LatLngByte.Skip(49).Take(8).ToArray(), 0), 12);
+                        double LNG = Math.Round(BitConverter.ToDouble(LatLngByte.Skip(57).Take(8).ToArray(), 0), 12);
+                        int BAT = BitConverter.ToInt32(LatLngByte.Skip(65).Take(4).ToArray());
+                        DBFlightData f = new DBFlightData
                         {
-
-                            ins.CollectionListPartial[selClient].FlightHDG = HDG;
-                            ins.CollectionListPartial[selClient].FlightSPD = SPD;
-                            ins.CollectionListPartial[selClient].FlightALT = ALT;
-                            ins.CollectionListPartial[selClient].FlightLAT = LAT;
-                            ins.CollectionListPartial[selClient].FlightLNG = LNG;
-                            ins.CollectionListPartial[selClient].FlightBAT = BAT;
-
-                            CLP[selClient].FlightHDG = HDG;
-                            CLP[selClient].FlightSPD = SPD;
-                            CLP[selClient].FlightALT = ALT;
-                            CLP[selClient].FlightLAT = LAT;
-                            CLP[selClient].FlightLNG = LNG;
-                        }
-                        catch (Exception e)
+                            FlightID = CurrentID,
+                            latitude = LAT,
+                            longitude = LNG,
+                            altitude = ALT,
+                            groundspeed = SPD,
+                            heading = HDG,
+                            X = X,
+                            Y = Y,
+                            Z = Z,
+                            X1 = X1,
+                            Y1 = Y1,
+                            Z1 = Z1,
+                            X2 = X2,
+                            Y2 = Y2,
+                            Z2 = Z2,
+                            datetimestamp = DateTime.Now.Ticks
+                        };
+                        await Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
                         {
-                            Console.WriteLine(e);
-                        }
-                        //DoroonDB.WriteFlightPoint(CurrentID, LAT, LNG, ALT, SPD, HDG, X, Y, Z, X1, Y1, Z1, X2, Y2, Z2);
-                        LatLngByte = null;
-                    });
+                            try
+                            {
+                                ins.CollectionListPartial[selClient].FlightHDG = HDG;
+                                ins.CollectionListPartial[selClient].FlightSPD = SPD;
+                                ins.CollectionListPartial[selClient].FlightALT = ALT;
+                                ins.CollectionListPartial[selClient].FlightLAT = LAT;
+                                ins.CollectionListPartial[selClient].FlightLNG = LNG;
+                                ins.CollectionListPartial[selClient].FlightBAT = BAT;
 
-                    dicFlightData.Add(dicFlightData.Count.ToString(), f);
-                    if (dicFlightData.Count > 60)
-                    {
-                        //foreach (KeyValuePair<string, FlightData> v in dicFlightData)
+                                CLP[selClient].FlightHDG = HDG;
+                                CLP[selClient].FlightSPD = SPD;
+                                CLP[selClient].FlightALT = ALT;
+                                CLP[selClient].FlightLAT = LAT;
+                                CLP[selClient].FlightLNG = LNG;
 
-                        //Task run db.WriteFlightPoint(dicFlightData);
-                        if (DoroonDB.IsRun)
-                        {
-                            dicFlightData.Clear();
-                            Console.WriteLine(dicFlightData.Count);
-                            Console.WriteLine("Clear");
-                            Console.WriteLine(dicFlightData.Count);
-                            DoroonDB.IsRun = false;
-                        }
-                        else
-                        {
-                            Task a = DoroonDB.WriteFlightPointV2(dicFlightData);
-                        }
-                        //Console.WriteLine(dicFlightData.Count);
+                                dicFlightData.Add(dicFlightData.Count.ToString(), f);
+                                if (dicFlightData.Count > 60)
+                                {
+                                    //foreach (KeyValuePair<string, FlightData> v in dicFlightData)            
+                                    if (DoroonDB.IsRun)
+                                    {
+                                        dicFlightData.Clear();
+                                        //Console.WriteLine(dicFlightData.Count);
+                                        //Console.WriteLine("Clear");
+                                        //Console.WriteLine(dicFlightData.Count);
+                                        DoroonDB.IsRun = false;
+                                    }
+                                    else
+                                    {
+                                        Task a = DoroonDB.WriteFlightPointV2(dicFlightData);
+                                    }
+                                    //Console.WriteLine(dicFlightData.Count);
+                                }
+                                //Console.WriteLine("ID:{0}:{1}", CurrentID,selClient);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                            }
+                            //DoroonDB.WriteFlightPoint(CurrentID, LAT, LNG, ALT, SPD, HDG, X, Y, Z, X1, Y1, Z1, X2, Y2, Z2);
+                            LatLngByte = null;
+                        });
+
                     }
-
                 }
                 else LatLngByte = null;
                 //await Task.Run(() => Console.WriteLine("Pushing new call {0} with {1} id"));
@@ -523,10 +520,10 @@ namespace DoroonNet.Command
             FlightInfoRightCommand firc = new FlightInfoRightCommand();
             //LinkID = ((IPEndPoint)handler.RemoteEndPoint).Port;
             var ClientID = ((IPEndPoint)handler.RemoteEndPoint).Port;
-
+            //map
             firc.DataID = ClientID.ToString();
             Clients.Add(handler);
-
+            Clisents.Add(new SocketClients { id = Clisents.Count, socket = handler });
             DoroonDB.WriteFlight(ClientID.ToString());
             FlightList = new List<FlightListData>();
             FlightList = DoroonDB.GetFlightID();
@@ -541,8 +538,6 @@ namespace DoroonNet.Command
                 });
                 CLP.Add(new FlightDataL()
                 { ID = FlightList.Count, FlightID = "#" + ClientID.ToString() });
-                //FirstClients = LinkID;
-                //Console.WriteLine("A=b");
             }
             else if (Clients.Count > ins.CollectionListPartial.Count)
             {
@@ -559,22 +554,23 @@ namespace DoroonNet.Command
             //MainWindow.MulitDroneLocation();
             MapClients += 1;
             int ClientDataCheck = Clients.IndexOf(Clients.FirstOrDefault(X => X.RemoteEndPoint == handler.RemoteEndPoint));
-            //CurrentMoveClients = ClientDataCheck;
             NewCurrentMoveClients = ClientID;
-            MainWindow.DelegateAddAircraftObg.Invoke(NewCurrentMoveClients);
+            MainWindow.DelegateAddAircraftObj.Invoke(NewCurrentMoveClients, ClientDataCheck, FlightList.Count);
             ConSoPt.ConsoPrint("#" + ClientID + " Connected "
                 + ins.CollectionListPartial.Count.ToString() + " " + Clients.Count.ToString());
         }
         private static void ClinetDel(Socket handler)
         {
             FlightInfoRightCommand FIRC = new FlightInfoRightCommand() { DataID = "" };
-            int DisClient = Clients.IndexOf(Clients.FirstOrDefault(X => X.RemoteEndPoint == handler.RemoteEndPoint));
+            int DelClient = Clients.IndexOf(Clients.FirstOrDefault(X => X.RemoteEndPoint == handler.RemoteEndPoint));
+            int DBid = FlightList.FindIndex(X => X.linkid == ((IPEndPoint)handler.RemoteEndPoint).Port.ToString());
             //CurrentMoveClients = 0;
             CurrentMapClients = ((IPEndPoint)handler.RemoteEndPoint).Port;
-            CLP.RemoveAt(DisClient);
+            CLP.RemoveAt(DelClient);
+            Clisents.RemoveAt(DelClient);
             Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
-                ins.CollectionListPartial.RemoveAt(DisClient);
+                ins.CollectionListPartial.RemoveAt(DelClient);
             });
             Clients.Remove(handler);
             MapClients -= 1;
@@ -588,7 +584,7 @@ namespace DoroonNet.Command
                 dicFlightData.Clear();
             }
             NewCurrentMoveClients = ((IPEndPoint)handler.RemoteEndPoint).Port;
-            MainWindow.DelegateDelAircraftObj.Invoke(NewCurrentMoveClients);
+            MainWindow.DelegateDelAircraftObj.Invoke(NewCurrentMoveClients, DBid);
             ConSoPt.ConsoPrint("#" + ((IPEndPoint)handler.RemoteEndPoint).Port.ToString() + " Disconnect");
         }
 
@@ -602,31 +598,31 @@ namespace DoroonNet.Command
                 CurrentFlightID = FlightList.IndexOf(FlightList.FirstOrDefault(X => int.Parse(X.linkid) == ((IPEndPoint)handler.RemoteEndPoint).Port)) + 1;
             }
             //Console.WriteLine(" ThreadID " + Thread.CurrentThread.ManagedThreadId);
-            if (bytesRead % 70 == 0 && bytesRead > 70)
+            if (bytesRead % 71 == 0 && bytesRead > 71)
             {
                 byte[] buf = new byte[bytesRead];
-                byte[] buf2 = new byte[70];
+                byte[] buf2 = new byte[71];
                 buf = mem.ToArray();
                 //Console.WriteLine("URA " + mem.Length + " URC " + buf.Length);
                 //int ClientDataCheck = Clients.IndexOf(Clients.FirstOrDefault(X => X.RemoteEndPoint == handler.RemoteEndPoint));
                 //CurrentMoveClients = ClientDataCheck;
                 try
                 {
-                    for (int i = 0; bytesRead / 70 > i; i++)
+                    for (int i = 0; bytesRead / 71 > i; i++)
                     {
-                        int x = i * 70;
+                        int x = i * 71;
                         //int ClientDataCheck = 
                         //Clients.IndexOf(Clients.FirstOrDefault(X => X.RemoteEndPoint == handler.RemoteEndPoint));
                         //CurrentMoveClients = ClientDataCheck;
                         OtherCount += 1;
                         if (buf.Length != 0)
                         {
-                            Buffer.BlockCopy(buf, x, buf2, 0, 70);
-                            ////Buffer.BlockCopy(BitConverter.GetBytes(ClientDataCheck), 0, buf2, 70, 4);
+                            Buffer.BlockCopy(buf, x, buf2, 0, 71);
+                            ////Buffer.BlockCopy(BitConverter.GetBytes(ClientDataCheck), 0, buf2, 71, 4);
 
                             if (FlightList != null && ClientDataCheck != -1)
                             {
-                                FlightDataConvert(CurrentFlightID, ClientDataCheck, buf2);
+                                FlightDataConvert(handler, buf2);
                             }
                             //if (ClientDataCheck == XYZChart.SelClient) WaveDataConvert(ClientDataCheck, buf2);
                             //Console.WriteLine("URA " + mem.Length);

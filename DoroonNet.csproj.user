@@ -33,6 +33,9 @@
     <Compile Update="Views\FlightInfo.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\FlightInfo2.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\FlightInfoRight.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -78,6 +81,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\FlightInfo.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\FlightInfo2.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\FlightInfoRight.xaml">

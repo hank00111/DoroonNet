@@ -11,19 +11,19 @@ using System.Threading.Tasks;
 
 namespace DoroonNet.Command
 {
-    class State
-    {
-        public Socket ClientSocket = null;
-        public const int BufferSize = 1024;
-        public byte[] Buffer = new byte[BufferSize];
-        public StringBuilder MsgBuilder = new StringBuilder();
-    }
+    //class State
+    //{
+    //    public Socket ClientSocket = null;
+    //    public const int BufferSize = 1024;
+    //    public byte[] Buffer = new byte[BufferSize];
+    //    public StringBuilder MsgBuilder = new StringBuilder();
+    //}
 
-    class DatagramState : State
-    {
-        public EndPoint EndPoint = new IPEndPoint(IPAddress.Any, 0);
-        public bool Recursive = false;
-    }
+    //class DatagramState : State
+    //{
+    //    public EndPoint EndPoint = new IPEndPoint(IPAddress.Any, 0);
+    //    public bool Recursive = false;
+    //}
 
     public class ConnectOBJ
     {

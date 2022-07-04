@@ -85,7 +85,7 @@
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     
-                                    <uc:FlightInfo Grid.Column ="0"/>
+                                    <uc:FlightInfo2 Grid.Column ="0"/>
                                     <uc:FlightInfoRight Grid.Column ="1"/>
                                 </Grid>
                             </TabItem>

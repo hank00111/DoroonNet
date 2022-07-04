@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DoroonNet.Resources"
               MouseEnter="M_DroneMarker_MouseEnter" MouseLeave="M_DroneMarker_MouseLeave">
-    <Grid>        
+    <Grid MouseDown="Grid_MouseDown">
         <Image x:Name="icon" Height="30" Width="30">
             <Image.Source>
                 <DrawingImage>
@@ -17,7 +17,7 @@
                 </DrawingImage>
             </Image.Source>
         </Image>
-        <TextBlock x:Name="IdText" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="14" FontWeight="Bold"/>
+        <TextBlock x:Name="IdText" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="14" FontWeight="Bold" FontFamily="Consolas" Background="#7F666666"/>
     </Grid>
-    
+
 </UserControl>

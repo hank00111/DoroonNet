@@ -289,6 +289,7 @@ namespace DoroonNet.RouteView
             NavPtDataGrid.ItemsSource = null;
             NavPtDataGrid.ItemsSource = NavPt;
 
+
             NavPtDataGrid.Height = STP.ActualHeight / 2;
             Ref.Stop();
         }
@@ -746,6 +747,59 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
         {
             ComBoXIsLoad = true;
         }
+
+        /// <summary>
+        /// 跟隨BT
+        /// </summary>
+        private void FollowBT_Click(object sender, RoutedEventArgs e)
+        {
+            HomeGrid.Visibility = Visibility.Hidden;
+            FollowGrid.Visibility = Visibility.Visible;
+            UpBT.Visibility = Visibility.Visible;
+        }
+        /// <summary>
+        /// 單獨BT
+        /// </summary>
+        private void NormalBT_Click(object sender, RoutedEventArgs e)
+        {
+            HomeGrid.Visibility = Visibility.Hidden;
+            Old.Visibility = Visibility.Visible;
+            UpBT.Visibility = Visibility.Visible;
+        }
+        /// <summary>
+        /// 上一步BT
+        /// </summary>
+        private void UpBT_Click(object sender, RoutedEventArgs e)
+        {
+            HomeGrid.Visibility = Visibility.Visible;
+            FollowGrid.Visibility = Visibility.Hidden;
+            Old.Visibility = Visibility.Hidden;
+            UpBT.Visibility = Visibility.Hidden;
+        }
+        /// <summary>
+        /// DoroonListbox_SelectionChanged
+        /// </summary>
+        private void DoroonListbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //foreach (var s in DoroonListbox.SelectedItems)
+            //{
+            //    Console.WriteLine(s);
+            //}
+        }
+        /// <summary>
+        /// DoroonEx_Expanded
+        /// </summary>
+        private void DoroonEx_Expanded(object sender, RoutedEventArgs e)
+        {
+            DoroonListbox.Items.Clear();
+            //DoroonListbox.SelectedItem = -1;
+            foreach (var s in TcpServer.CLP)
+            {
+                DoroonListbox.Items.Add(s.FlightID);
+            }
+        }
+
+
         #endregion
     }
 }

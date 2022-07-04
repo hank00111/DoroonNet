@@ -77,3 +77,6 @@ E:\Program\DoroonNet\obj\Debug\net5.0-windows\Resources\NavMarker.g.cs
 E:\Program\DoroonNet\obj\Debug\net5.0-windows\Resources\NavMarker.baml
 E:\Program\DoroonNet\obj\Debug\net5.0-windows\Views\SYS.g.cs
 E:\Program\DoroonNet\obj\Debug\net5.0-windows\Views\SYS.baml
+E:\Program\DoroonNet\bin\Debug\net5.0-windows\DoroonNet.dll.config
+E:\Program\DoroonNet\obj\Debug\net5.0-windows\Views\FlightInfo2.g.cs
+E:\Program\DoroonNet\obj\Debug\net5.0-windows\Views\FlightInfo2.baml

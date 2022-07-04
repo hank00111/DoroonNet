@@ -36,9 +36,11 @@ namespace DoroonNet.Resources
         //TextBlock textBlock;
         //DroneControl droneControl = new DroneControl();
         public MainWindow MainWindow { get; }
-        public static Image iaC { get; set; }        
+        public static Image iaC { get; set; }
 
-        public M_DroneMarker(MainWindow window, GMapMarker marker ,int title)
+        int MarkerID,DBid;
+
+        public M_DroneMarker(MainWindow window, GMapMarker marker , int title, int ID, int DBID)
         {
             InitializeComponent();
 
@@ -64,7 +66,10 @@ namespace DoroonNet.Resources
             this.Loaded += new RoutedEventHandler(M_DroneMarker_Loaded);
             this.Unloaded += new RoutedEventHandler(M_DroneMarker_Unloaded);
             this.SizeChanged += new SizeChangedEventHandler(M_DroneMarker_SizeChanged);
+            //this
             IdText.Text = title.ToString();
+            MarkerID = ID;
+            DBid = DBID;
             //textBlock.Text = "asd";
             //textBlock.Height = 30;
             //textBlock.Width = 45;
@@ -121,6 +126,12 @@ namespace DoroonNet.Resources
         private void M_DroneMarker_MouseLeave(object sender, MouseEventArgs e)
         {
             //Poup.IsOpen = false;
+        }         
+
+        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Console.WriteLine(MarkerID);
+            MainWindow.DelegateRouteChangeObj.Invoke(MarkerID, DBid);
         }
     }
 

@@ -253,17 +253,22 @@ namespace DoroonNet
         GMapMarker CurrentElement;
         //MarkerControl mkControl = new MarkerControl();
         //VariableRes VAR = new VariableRes();
-        public delegate void DelegateDelAircraft(int AircraftID);
+        public delegate void DelegateAddAircraft(int AircraftID, int ID, int DBID);
+        public static DelegateAddAircraft DelegateAddAircraftObj;
+        public delegate void DelegateDelAircraft(int AircraftID, int DBID);
         public static DelegateDelAircraft DelegateDelAircraftObj;
-        public delegate void DelegateAddAircraft(int AircraftID);
-        public static DelegateAddAircraft DelegateAddAircraftObg;
+        public delegate void DelegateRouteChange(int MarkerID, int DBID);
+        public static DelegateRouteChange DelegateRouteChangeObj;
+
         private bool mapRender = false;
         private bool isMouseDown;
-        private bool MovePositionBool = false;
+        // private bool MovePositionBool = false;
+        private int MovePathPosition = 0;
         private int baseMarkerCount = 2;
         private int i = 0;
         private int DroneMarkerCount = 0;
-    
+        private int Cmr = 0; //ChangeMoveRoute
+
         private List<PointLatLng> MoveHistory = new List<PointLatLng>();
         private List<PointLatLng> NavList = new List<PointLatLng>();
 
@@ -294,7 +299,7 @@ namespace DoroonNet
             if (i == 0)
             {
                 DroneLoc_loop = new DispatcherTimer();
-                DroneLoc_loop.Interval = TimeSpan.FromMilliseconds(50);
+                DroneLoc_loop.Interval = TimeSpan.FromMilliseconds(100);
                 DroneLoc_loop.Tick += DroneLocation_loop;
                 DroneLoc_loop.Start();
             }
@@ -302,7 +307,8 @@ namespace DoroonNet
             nav = new Nav();
             DelegateModeMapObj = ColorChg;
             DelegateDelAircraftObj = AircraftDel;
-            DelegateAddAircraftObg = AircraftAdd;
+            DelegateAddAircraftObj = AircraftAdd;
+            DelegateRouteChangeObj = MoveRouteChange;
         }
 
         private void MainMap_MouseMove(object sender, MouseEventArgs e)
@@ -379,6 +385,7 @@ namespace DoroonNet
             marker.Tag = "Ground";
             this.MainMap.Markers.Add(marker);
         }
+
         private void AddNavMarker(PointLatLng pt)
         {
 
@@ -416,44 +423,33 @@ namespace DoroonNet
             MainMap.Markers.Add(marker);
         }
 
-        private int MovePathPosition = 0;
-        //double testlag = 25.084057;
-        //double testlng = 121.457940;
-
-        public void AircraftAdd(int AircraftID)
+        public void AircraftAdd(int AircraftID, int ID, int DBID)
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 GMapMarker marker = new GMapMarker(new PointLatLng(25.089057, 121.456940));
-                marker.Shape = new M_DroneMarker(this, marker, AircraftID);
+                marker.Shape = new M_DroneMarker(this, marker, AircraftID, ID, DBID);
                 marker.ZIndex = 55;
                 marker.Tag = AircraftID;
                 MainMap.Markers.Add(marker);
                 DroneMarkerCount += 1;
-                MovePositionBool = true;
-                Console.WriteLine("ADD " + TcpServer.NewCurrentMoveClients);
+                //MovePositionBool = true;
+                Console.WriteLine("ADD " + ID);
             }));
 
         }
 
-        public void AircraftDel(int AircraftID)
+        public void AircraftDel(int AircraftID, int DBID)
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 DroneMarkerCount -= 1;
                 MovePathPosition -= 1;
                 GMapMarker DelFlight = MainMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == AircraftID.ToString());
-                Console.WriteLine(DelFlight.Tag + "Clear");
-                MainMap.Markers.Remove(DelFlight);
+                //Console.WriteLine(DelFlight.Tag + "Clear");
+                MainMap.Markers.Remove(DelFlight);           
+                MoveRouteChange(0, DBID);
 
-                GMapMarker ClearRT = MainMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "Route");
-
-                if (ClearRT != null)
-                {
-                    MainMap.Markers.Remove(ClearRT);
-                    MoveHistory.Clear();
-                }
-                
             }));
         }
 
@@ -523,6 +519,20 @@ namespace DoroonNet
             }
 
         }
+        private void MoveRouteChange(int chg, int DBID)
+        {
+            List<PointLatLng> FlightDataGPS = DoroonSQLLiteDB.DelegateFlightDataGPSObj.Invoke(DBID);
+            Cmr = chg;
+            GMapMarker ClearRT = MainMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "Route");
+
+            if (ClearRT != null)
+            {
+                MainMap.Markers.Remove(ClearRT);
+                MoveHistory.Clear();
+                MoveHistory = FlightDataGPS;
+            }
+        }
+
         private void NavPlanning()
         {
             GMapMarker NavMarkers = MainMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "NavRoute");
@@ -572,7 +582,6 @@ namespace DoroonNet
             {
                 NavPlanning();
             }
-            //VariableRes.Lat += 0.0001;
             GMapMarker NAVPt = MainMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "NAVPT");
             if (NAVPt != null && Nav.ReqDel)
             {
@@ -635,11 +644,12 @@ namespace DoroonNet
                             //Console.WriteLine(s.FlightID.Replace("#", string.Empty));
                             int a = MainMap.Markers.IndexOf(MainMap.Markers.FirstOrDefault(u => u.Tag.ToString() == s.FlightID.Replace("#", string.Empty)));
                             Task.Run(() => DroneLocation_Move(s.FlightLAT, s.FlightLNG, s.FlightHDG, a));
+                            //Console.WriteLine("ID:{0}:{1}{2}{3}",a, s.FlightLAT, s.FlightLNG,s.FlightID);
                         }
                         if (TcpServer.CLP[0].FlightLAT != 0)
                         {
-                            point.Lat = TcpServer.CLP[0].FlightLAT;//VariableRes.Lat
-                            point.Lng = TcpServer.CLP[0].FlightLNG;
+                            point.Lat = TcpServer.CLP[Cmr].FlightLAT;//VariableRes.Lat
+                            point.Lng = TcpServer.CLP[Cmr].FlightLNG;
                             MoveHistory.Add(point);
                         }
 
@@ -669,10 +679,7 @@ namespace DoroonNet
                 {
                     Console.WriteLine(EX);
                 }
-                //CurrentMoveClients
-                //ins.CollectionListPartial[CurrentMoveClients].FlightLAT ins.CollectionListPartial[CurrentMoveClients].FlightLNG
-                //ins.CollectionListPartial[CurrentMoveClients].FlightHDG
-                //Console.WriteLine();
+
             }
 
         }      
