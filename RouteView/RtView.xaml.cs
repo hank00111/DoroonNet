@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,16 +30,20 @@ namespace DoroonNet.RouteView
     public partial class RtView : Window
     {
         //private int t = 0;
-        private byte[] NavPtData;
+        private byte[] NavPtData, NavOffSetData;
         private bool AltSet;
         private bool GoHome;
-        private bool ComBoXIsLoad;
+        private bool ComBoXIsLoad, ComBoXIsLoadFW;
         private bool ForwardBtIsLoad = false;
         private bool isForward = true;
+        private float X, Y, Z;
+        private double WindowStartPosX, WindowStartPosY;
         private PointLatLng Pos;
         private RtVModel RtV = new RtVModel();        
         private List<NavData> NavPt = new List<NavData>();
         private DispatcherTimer Ref;
+
+        private static string Leader = "";
 
         public static bool isClickSend;
         public static List<PointLatLng> NavPtLatLng;
@@ -51,8 +56,18 @@ namespace DoroonNet.RouteView
             AngleTxT.DataContext = RtV;
             SLTxT.DataContext = RtV;
             AltTxT.DataContext = RtV;
+            #region FW
+            HeightTxTFW.DataContext = RtV;
+            WidthTxTFW.DataContext = RtV;
+            AngleTxTFW.DataContext = RtV;
+            SLTxTFW.DataContext = RtV;
+            AltTxTFW.DataContext = RtV;
+            #endregion
             NavPtDataGrid.ItemsSource = null;
             NavPtDataGrid.ItemsSource = NavPt;
+            NavPtDataGridFW.ItemsSource = null;
+            NavPtDataGridFW.ItemsSource = NavPt;
+            var x =oneMeterLat(new PointLatLng(47.39792798418233, 8.545802235603333));
             Pos = P;
             Ref = new DispatcherTimer();
             Ref.Interval = TimeSpan.FromMilliseconds(1);
@@ -98,11 +113,11 @@ namespace DoroonNet.RouteView
         #endregion
 
         #region Send
-
         private void SendMsgBt_Click(object sender, RoutedEventArgs e)
         {
 
         }
+
         private void SendMesgBt_Click(object sender, RoutedEventArgs e)
         {
             string LogSave = "";
@@ -200,6 +215,106 @@ namespace DoroonNet.RouteView
             }
             //Console.WriteLine(NavPtData.Length);
         }
+        private void SendMesgBtFW_Click(object sender, RoutedEventArgs e)
+        {
+            string LogSave = "";
+            NavPtLatLng = new List<PointLatLng>();
+            int pos = 0;
+            int one = 0;
+            int Mode = 0;
+            GoHome = true;
+
+            switch (ComboBoxFW.SelectedIndex)
+            {
+                case 0:
+                    NavPtData = new byte[(5 * 24) + 4 + 1 + 1];//5 int.Parse(LapTxTBox.Text)              
+                    LogSave = $"R,Lap:[{LapTxTBoxFW.Text}],isForward:[{isForward}],H:[{RtV.HeightTxFW}],W:[{RtV.WidthTxFW}],Angle:[{RtV.AngleTxFW}],Alt:[{RtV.AltTxFW}],Nav:";
+                    break;
+                case 1:
+                    NavPtData = new byte[(4 * 24) + 4 + 1 + 1];//4 int.Parse(LapTxTBox.Text)
+                    NavOffSetData = new byte[20];
+                    LogSave = $"T,Lap:[{LapTxTBoxFW.Text}],isForward:[{isForward}],H:[{RtV.SLTxFW}],W:[0],Angle:[{RtV.AngleTxFW}],Alt:[{RtV.AltTxFW}],Nav:";
+                    break;
+                case 2:
+                    NavPtData = new byte[(24) + 12 + 1 + 1];
+                    LogSave = $"C,Lap:[{LapTxTBoxFW.Text}],isForward:[{isForward}],H:[{RtV.HeightTxFW}],W:[{RtV.WidthTxFW}],Angle:[{RtV.AngleTxFW}],Alt:[{RtV.AltTxFW}],Nav:";
+                    break;
+            }
+
+            if (MessageBox.Show("請於下方確認無人機選擇是否正確。\n共" + NavPt.Count + "個導航點高度是否設定完成。(1/2)", "傳送導航資料", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)//&& FlightInfoRight.SelSend != -1
+            //IsGoHomeSel
+            {
+                if (MessageBox.Show("將傳送 " + NavPt.Count + "個導航點，返回起始點:" + GoHome + "\n是否傳送導航資料(2/2)", "傳送導航資料", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+
+                    if (ComboBoxFW.SelectedIndex != 2)
+                    {
+                        foreach (var item in NavPt)
+                        {
+                            Buffer.BlockCopy(BitConverter.GetBytes(item.SPD), 0, NavPtData, pos, 4);
+                            pos = pos + 4;
+                            Buffer.BlockCopy(BitConverter.GetBytes(item.ALT), 0, NavPtData, pos, 4);
+                            pos = pos + 4;
+                            Buffer.BlockCopy(BitConverter.GetBytes(item.NavPt.Lat), 0, NavPtData, pos, 8);
+                            pos = pos + 8;
+                            Buffer.BlockCopy(BitConverter.GetBytes(item.NavPt.Lng), 0, NavPtData, pos, 8);
+                            pos = pos + 8;
+                            LogSave += $"[{item.SPD},{item.ALT},[{item.NavPt.Lat},{item.NavPt.Lng }]";
+                            NavPtLatLng.Add(new PointLatLng(item.NavPt.Lat, item.NavPt.Lng));
+                            //Console.WriteLine(item.SPD + "," + item.ALT + "," + item.NavPt.Lat + "," + item.NavPt.Lng);
+                        }
+                        Buffer.BlockCopy(BitConverter.GetBytes(int.Parse(LapTxTBoxFW.Text)), 0, NavPtData, pos, 4);
+                        pos = pos + 4;
+                        Buffer.BlockCopy(BitConverter.GetBytes(isForward), 0, NavPtData, pos, 1);
+                        pos = pos + 1;
+                    }
+                    else
+                    {
+                        foreach (var item in NavPt)
+                        {
+                            if (one < 1)
+                            {
+                                Buffer.BlockCopy(BitConverter.GetBytes(item.SPD), 0, NavPtData, pos, 4);
+                                pos = pos + 4;
+                                Buffer.BlockCopy(BitConverter.GetBytes(item.ALT), 0, NavPtData, pos, 4);
+                                pos = pos + 4;
+                                Buffer.BlockCopy(BitConverter.GetBytes(item.NavPt.Lat), 0, NavPtData, pos, 8);
+                                pos = pos + 8;
+                                Buffer.BlockCopy(BitConverter.GetBytes(item.NavPt.Lng), 0, NavPtData, pos, 8);
+                                pos = pos + 8;
+                                Buffer.BlockCopy(BitConverter.GetBytes((float)RtV.HeightTxFW / 2), 0, NavPtData, pos, 4);
+                                pos = pos + 4;
+                                Buffer.BlockCopy(BitConverter.GetBytes((float)RtV.WidthTxFW / 2), 0, NavPtData, pos, 4);
+                                pos = pos + 4;
+                                Buffer.BlockCopy(BitConverter.GetBytes(int.Parse(LapTxTBoxFW.Text)), 0, NavPtData, pos, 4);
+                                pos = pos + 4;
+                                Buffer.BlockCopy(BitConverter.GetBytes(isForward), 0, NavPtData, pos, 1);
+                                pos = pos + 1;
+                            }
+
+                            if (one >= 1)
+                            {
+                                LogSave += $"[{item.SPD},{item.ALT},[{item.NavPt.Lat},{item.NavPt.Lng }]";
+                                NavPtLatLng.Add(new PointLatLng(item.NavPt.Lat, item.NavPt.Lng));
+                            }
+                            one++;
+                            //Console.WriteLine(item.SPD + "," + item.ALT + "," + item.NavPt.Lat + "," + item.NavPt.Lng);
+                        }
+                        Mode = 1;
+                    }
+                    isClickSend = true;
+                    var x = OffSetC();
+                    LogSave += $",OffSet:[{X},{Y},{Z}]";
+                    Buffer.BlockCopy(BitConverter.GetBytes(GoHome), 0, NavPtData, pos, 1);
+                    //TcpServer.SendNAV(FlightInfoRight.SelSend, NavPtData, LogSave, Mode);
+                    TcpServer.SendNAVFW(NavPtData, X, Y, Z, LogSave, Mode);
+                }
+            }
+            else
+            {
+                MessageBox.Show("請於下方選擇傳送資料的對象!!", "錯誤", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         #endregion
 
         #region SetTakeoffBt
@@ -230,6 +345,99 @@ namespace DoroonNet.RouteView
         }
         #endregion
 
+        /// <summary>
+        /// NewMap
+        /// </summary>
+        private void PlanMap_Loaded(object sender, RoutedEventArgs e)
+        {
+            GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerAndCache;
+            PlanMap.MapProvider = GMapProviders.GoogleSatelliteMap;
+            PlanMap.Position = new PointLatLng(Pos.Lat, Pos.Lng);
+            PlanMap.MaxZoom = 30;
+            PlanMap.MinZoom = 10;
+            PlanMap.Zoom = 20;
+            //TEFW(RtV.HeightTx, RtV.WidthTx, RtV.AngleTx);
+        }
+        private void PlanMap_OnMapDrag()
+        {
+            switch (ComboBoxFW.SelectedIndex)
+            {
+                case 0:
+                    TEFW(RtV.HeightTxFW, RtV.WidthTxFW, RtV.AngleTxFW);
+                    break;
+                case 1:
+                    TEFW(RtV.SLTxFW, 0, RtV.AngleTxFW);
+                    break;
+                case 2:
+                    TEFW(RtV.HeightTxFW, RtV.WidthTxFW, RtV.AngleTxFW);
+                    break;
+            }
+        }
+        private void ComboBoxFW_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ComBoXIsLoadFW)
+            {
+                if (ComboBoxFW.SelectedIndex == 0 || ComboBoxFW.SelectedIndex == 2)
+                {
+                    //REct.Visibility = Visibility.Visible;
+                    //EQtriangle.Visibility = Visibility.Collapsed;
+                    TEFW(RtV.HeightTxFW, RtV.WidthTxFW, 0);
+                }
+                else
+                {
+                    //EQtriangle.Visibility = Visibility.Visible;
+                    //REct.Visibility = Visibility.Collapsed;
+                    TEFW(RtV.SLTxFW, 0, RtV.AngleTxFW);
+                }
+            }
+        }
+        private void ComboBoxFW_Loaded(object sender, RoutedEventArgs e)
+        {
+            ComBoXIsLoadFW = true;
+        }
+        private void TEFW(double h, double w, int angle)
+        {
+            NavPt.Clear();
+            switch (ComboBoxFW.SelectedIndex)
+            {
+                case 0:
+                    Rectangle(PlanMap.Position, h, w, angle, 1);
+                    break;
+                case 1:
+                    Triangle(PlanMap.Position, h, angle, 1);
+                    break;
+                case 2:
+                    Ellipse(PlanMap.Position, h, w, angle, 1);
+                    break;
+            }
+        }
+        private byte[] OffSetC()
+        {
+            byte[] OffSetData = new byte[20];
+            int ClientLeaderCheck = TcpServer.Clisents.FindIndex(X => X.id == 0);
+            int ClientFWCheck = TcpServer.Clisents.FindIndex(X => X.id == 1);
+            PointLatLng LeaderPt = TcpServer.Clisents[ClientLeaderCheck].Pos;
+            PointLatLng FWPt = TcpServer.Clisents[ClientFWCheck].Pos;
+            X = (float)(Math.Abs(LeaderPt.Lng - FWPt.Lng) * 101775.45);
+            Y = (float)(Math.Abs(LeaderPt.Lat - FWPt.Lat) * 110936.2);
+            Z = 3;
+            Buffer.BlockCopy(Encoding.ASCII.GetBytes("OUAV"), 0, OffSetData, 0, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(X), 0, OffSetData, 4, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(Y), 0, OffSetData, 8, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(Z), 0, OffSetData, 12, 4);
+            Buffer.BlockCopy(Encoding.ASCII.GetBytes("TUAV"), 0, OffSetData, 16, 4);
+            return OffSetData; 
+            //A.X-B.X A.Y-B.Y X*101775.45 Y*110936.2 
+        }
+        //private void OffSetC()
+        //{
+
+        //}
+
+
+        /// <summary>
+        /// OldMap
+        /// </summary>
         private void RtMap_Loaded(object sender, RoutedEventArgs e)
         {
             GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerAndCache;
@@ -239,7 +447,7 @@ namespace DoroonNet.RouteView
             RtMap.MinZoom = 10;
             RtMap.Zoom = 20;
             //Console.WriteLine(RtMap.PositionPixel);
-            TE(RtV.HeightTx, RtV.WidthTx, RtV.AngleTx);
+            //TE(RtV.HeightTx, RtV.WidthTx, RtV.AngleTx);
         }
         private void RtMap_OnMapDrag()
         {
@@ -264,13 +472,13 @@ namespace DoroonNet.RouteView
             switch (ComBoBoX.SelectedIndex)
             {
                 case 0:
-                    Rectangle(RtMap.Position, h, w, angle);
+                    Rectangle(RtMap.Position, h, w, angle, 0);
                     break;
                 case 1:
-                    Triangle(RtMap.Position, h, angle);
+                    Triangle(RtMap.Position, h, angle, 0);
                     break;
                 case 2:
-                    Ellipse(RtMap.Position, h, w, angle);
+                    Ellipse(RtMap.Position, h, w, angle, 0);
                     break;
             }
             AltDGRef();
@@ -283,19 +491,23 @@ namespace DoroonNet.RouteView
         {
             foreach (var data in NavPt)
             {
-                data.ALT = RtV.AltTx;
+                data.ALT = RtV.AltTxFW;
+                //data.ALT = RtV.AltTx;
             }
             AltSet = false;
             NavPtDataGrid.ItemsSource = null;
             NavPtDataGrid.ItemsSource = NavPt;
+            NavPtDataGridFW.ItemsSource = null;
+            NavPtDataGridFW.ItemsSource = NavPt;
 
 
             NavPtDataGrid.Height = STP.ActualHeight / 2;
+            NavPtDataGridFW.Height = STPFW.ActualHeight / 1.5;
             Ref.Stop();
         }
 
         #region 正三角形
-        private void Triangle(PointLatLng StartPosition, double SideLength, int Angle)
+        private void Triangle(PointLatLng StartPosition, double SideLength, int Angle, int mode)
         {
             List<PointLatLng> TriPoint = new List<PointLatLng>(); 
             TriPoint.Add(StartPosition);
@@ -310,46 +522,87 @@ namespace DoroonNet.RouteView
                 if (i > 1)
                 {
                     double CKdist =
-GeoCalculator.GetDistance(TriPoint[i - 1].Lat, TriPoint[i - 1].Lng, TriPoint[i].Lat, TriPoint[i].Lng, 5, DistanceUnit.Meters);
+                        GeoCalculator.GetDistance(TriPoint[i - 1].Lat, TriPoint[i - 1].Lng, TriPoint[i].Lat, TriPoint[i].Lng, 5, DistanceUnit.Meters);
                     Console.WriteLine("" + CKdist + " M " + i);
                 }
 
-                NavData data = new NavData
+                if (mode == 0)
                 {
-                    ID = i,
-                    SPD = 1.5f,
-                    ALT = RtV.AltTx,
-                    NavPt = new PointLatLng(TriPoint[i].Lat, TriPoint[i].Lng)
-                };
-                NavPt.Add(data);
+                    NavData data = new NavData
+                    {
+                        ID = i,
+                        SPD = 1.5f,
+                        ALT = RtV.AltTx,
+                        NavPt = new PointLatLng(TriPoint[i].Lat, TriPoint[i].Lng)
+                    };
+                    NavPt.Add(data);
+                }
+                else
+                {
+                    NavData data = new NavData
+                    {
+                        ID = i,
+                        SPD = 1.5f,
+                        ALT = RtV.AltTxFW,
+                        NavPt = new PointLatLng(TriPoint[i].Lat, TriPoint[i].Lng)
+                    };
+                    NavPt.Add(data);
+                }
+
+                //NavPt.Add(data);
             }
             NavPtDataGrid.ItemsSource = null;
             NavPtDataGrid.ItemsSource = NavPt;
+            NavPtDataGridFW.ItemsSource = null;
+            NavPtDataGridFW.ItemsSource = NavPt;
 
             GMapRoute gmRoute = new GMapRoute(TriPoint);//
             gmRoute.Shape = new System.Windows.Shapes.Path() { Stroke = new SolidColorBrush(Colors.Yellow), StrokeThickness = 2 };
             gmRoute.Tag = "Route";
-            GMapMarker Route = RtMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "Route");
-            if (Route != null)
+            
+            if(mode == 0)
             {
-                int x = RtMap.Markers.IndexOf(RtMap.Markers.FirstOrDefault(u => u.Tag.ToString() == "Route"));
-                RtMap.Markers.Remove(Route);
-                RtMap.Markers.Add(gmRoute);
-                //Console.WriteLine(x);
-                //Route = new GMapRoute(MoveHistory);
-                //Route.Shape = new System.Windows.Shapes.Path() { Stroke = new SolidColorBrush(Colors.Yellow), StrokeThickness = 2 };
-                //Route.Tag = "Route";
+                GMapMarker Route = RtMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "Route");
+                if (Route != null)
+                {
+                    int x = RtMap.Markers.IndexOf(RtMap.Markers.FirstOrDefault(u => u.Tag.ToString() == "Route"));
+                    RtMap.Markers.Remove(Route);
+                    RtMap.Markers.Add(gmRoute);
+                    //Console.WriteLine(x);
+                    //Route = new GMapRoute(MoveHistory);
+                    //Route.Shape = new System.Windows.Shapes.Path() { Stroke = new SolidColorBrush(Colors.Yellow), StrokeThickness = 2 };
+                    //Route.Tag = "Route";
+                }
+                else
+                {
+                    RtMap.Markers.Add(gmRoute);
+                }
             }
-            else
+            else if(mode == 1)
             {
-                RtMap.Markers.Add(gmRoute);
+                GMapMarker Route = PlanMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "Route");
+                if (Route != null)
+                {
+                    int x = PlanMap.Markers.IndexOf(PlanMap.Markers.FirstOrDefault(u => u.Tag.ToString() == "Route"));
+                    PlanMap.Markers.Remove(Route);
+                    PlanMap.Markers.Add(gmRoute);
+                    //Console.WriteLine(x);
+                    //Route = new GMapRoute(MoveHistory);
+                    //Route.Shape = new System.Windows.Shapes.Path() { Stroke = new SolidColorBrush(Colors.Yellow), StrokeThickness = 2 };
+                    //Route.Tag = "Route";
+                }
+                else
+                {
+                    PlanMap.Markers.Add(gmRoute);
+                }
             }
+            
 
         }
         #endregion
 
         #region 矩形
-        private void Rectangle(PointLatLng StartPosition, double H, double W, int Angle)
+        private void Rectangle(PointLatLng StartPosition, double H, double W, int Angle, int mode)
         {
             List<PointLatLng> RecPoint = new List<PointLatLng>();
             RecPoint.Add(StartPosition);
@@ -381,25 +634,49 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
                 };
                 NavPt.Add(data);
             }
-            //NavPtDataGrid.ItemsSource = null;
-            NavPtDataGrid.ItemsSource = NavPt;
+
             GMapRoute gmRoute = new GMapRoute(RecPoint);//
             gmRoute.Shape = new System.Windows.Shapes.Path() { Stroke = new SolidColorBrush(Colors.Yellow), StrokeThickness = 2 };
             gmRoute.Tag = "Route";
-            GMapMarker Route = RtMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "Route");
-            if (Route != null)
+            if (mode == 0)
             {
-                int x = RtMap.Markers.IndexOf(RtMap.Markers.FirstOrDefault(u => u.Tag.ToString() == "Route"));
-                RtMap.Markers.Remove(Route);
-                RtMap.Markers.Add(gmRoute);
-                //Console.WriteLine(x);
-                //Route = new GMapRoute(MoveHistory);
-                //Route.Shape = new System.Windows.Shapes.Path() { Stroke = new SolidColorBrush(Colors.Yellow), StrokeThickness = 2 };
-                //Route.Tag = "Route";
+                NavPtDataGrid.ItemsSource = null;
+                NavPtDataGrid.ItemsSource = NavPt;
+                GMapMarker Route = RtMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "Route");
+                if (Route != null)
+                {
+                    int x = RtMap.Markers.IndexOf(RtMap.Markers.FirstOrDefault(u => u.Tag.ToString() == "Route"));
+                    RtMap.Markers.Remove(Route);
+                    RtMap.Markers.Add(gmRoute);
+                    //Console.WriteLine(x);
+                    //Route = new GMapRoute(MoveHistory);
+                    //Route.Shape = new System.Windows.Shapes.Path() { Stroke = new SolidColorBrush(Colors.Yellow), StrokeThickness = 2 };
+                    //Route.Tag = "Route";
+                }
+                else
+                {
+                    RtMap.Markers.Add(gmRoute);
+                }
             }
-            else
+            else if (mode == 1)
             {
-                RtMap.Markers.Add(gmRoute);
+                NavPtDataGridFW.ItemsSource = null;
+                NavPtDataGridFW.ItemsSource = NavPt;
+                GMapMarker Route = PlanMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "Route");
+                if (Route != null)
+                {
+                    int x = PlanMap.Markers.IndexOf(PlanMap.Markers.FirstOrDefault(u => u.Tag.ToString() == "Route"));
+                    PlanMap.Markers.Remove(Route);
+                    PlanMap.Markers.Add(gmRoute);
+                    //Console.WriteLine(x);
+                    //Route = new GMapRoute(MoveHistory);
+                    //Route.Shape = new System.Windows.Shapes.Path() { Stroke = new SolidColorBrush(Colors.Yellow), StrokeThickness = 2 };
+                    //Route.Tag = "Route";
+                }
+                else
+                {
+                    PlanMap.Markers.Add(gmRoute);
+                }
             }
             //double dist =
             //    GeoCalculator.GetDistance(StartLat, StartLng, StartLat, StartLng, 5, DistanceUnit.Meters);
@@ -410,7 +687,7 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
 
         #region 橢圓形        
         double x0 = 0, y0 = 0;
-        private void Ellipse(PointLatLng StartPosition, double H, double W, int Angle)
+        private void Ellipse(PointLatLng StartPosition, double H, double W, int Angle, int mode)
         {
             double a = 0;
             List<PointLatLng> ElliPoint = new List<PointLatLng>();
@@ -498,8 +775,6 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
                 NavPt.Add(data);
 
             }
-            NavPtDataGrid.ItemsSource = null;
-            NavPtDataGrid.ItemsSource = NavPt;
             //for (int i = -1; i > -91; i--)
             //{
             //    double CKdist =
@@ -512,20 +787,45 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
             GMapRoute gmRoute = new GMapRoute(ElliPoint);//
             gmRoute.Shape = new System.Windows.Shapes.Path() { Stroke = new SolidColorBrush(Colors.Yellow), StrokeThickness = 2 };
             gmRoute.Tag = "Route";
-            GMapMarker Route = RtMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "Route");
-            if (Route != null)
+            if (mode == 0)
             {
-                int x = RtMap.Markers.IndexOf(RtMap.Markers.FirstOrDefault(u => u.Tag.ToString() == "Route"));
-                RtMap.Markers.Remove(Route);
-                RtMap.Markers.Add(gmRoute);
-                //Console.WriteLine(x);
-                //Route = new GMapRoute(MoveHistory);
-                //Route.Shape = new System.Windows.Shapes.Path() { Stroke = new SolidColorBrush(Colors.Yellow), StrokeThickness = 2 };
-                //Route.Tag = "Route";
+                NavPtDataGrid.ItemsSource = null;
+                NavPtDataGrid.ItemsSource = NavPt;
+                GMapMarker Route = RtMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "Route");
+                if (Route != null)
+                {
+                    int x = RtMap.Markers.IndexOf(RtMap.Markers.FirstOrDefault(u => u.Tag.ToString() == "Route"));
+                    RtMap.Markers.Remove(Route);
+                    RtMap.Markers.Add(gmRoute);
+                    //Console.WriteLine(x);
+                    //Route = new GMapRoute(MoveHistory);
+                    //Route.Shape = new System.Windows.Shapes.Path() { Stroke = new SolidColorBrush(Colors.Yellow), StrokeThickness = 2 };
+                    //Route.Tag = "Route";
+                }
+                else
+                {
+                    RtMap.Markers.Add(gmRoute);
+                }
             }
-            else
+            else if (mode == 1)
             {
-                RtMap.Markers.Add(gmRoute);
+                //NavPtDataGridFW.ItemsSource = null;
+                //NavPtDataGridFW.ItemsSource = NavPt;
+                GMapMarker Route = PlanMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "Route");
+                if (Route != null)
+                {
+                    int x = PlanMap.Markers.IndexOf(PlanMap.Markers.FirstOrDefault(u => u.Tag.ToString() == "Route"));
+                    PlanMap.Markers.Remove(Route);
+                    PlanMap.Markers.Add(gmRoute);
+                    //Console.WriteLine(x);
+                    //Route = new GMapRoute(MoveHistory);
+                    //Route.Shape = new System.Windows.Shapes.Path() { Stroke = new SolidColorBrush(Colors.Yellow), StrokeThickness = 2 };
+                    //Route.Tag = "Route";
+                }
+                else
+                {
+                    PlanMap.Markers.Add(gmRoute);
+                }
             }
 
 
@@ -572,7 +872,7 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
             #endregion
         }
         private double oneMeterLat(PointLatLng Startpt)
-        {            
+        {
             return 1 / GeoCalculator.GetDistance(Startpt.Lat, Startpt.Lng, Startpt.Lat + 1, Startpt.Lng, 12, DistanceUnit.Meters);
         }
         private double oneMeterLng(PointLatLng Startpt)
@@ -709,9 +1009,7 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
             RtV.AltTx += float.Parse(AltTxTBox.Text);
             AltSet = true;
             AltDGRef();
-
         }
-
         private void AltDimBt_Click(object sender, RoutedEventArgs e)
         {
             if (RtV.AltTx > 0)
@@ -722,6 +1020,7 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
             }
         }
         #endregion
+
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //EQtriangle
@@ -753,15 +1052,24 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
         /// </summary>
         private void FollowBT_Click(object sender, RoutedEventArgs e)
         {
+            RtWindow.Left = 360;
+            RtWindow.Top = 200;
+            RtWindow.Width = 1200;
+            RtWindow.Height = 750;            
             HomeGrid.Visibility = Visibility.Hidden;
             FollowGrid.Visibility = Visibility.Visible;
             UpBT.Visibility = Visibility.Visible;
+
         }
         /// <summary>
         /// 單獨BT
         /// </summary>
         private void NormalBT_Click(object sender, RoutedEventArgs e)
         {
+            RtWindow.Left = 460;
+            RtWindow.Top = 250;
+            RtWindow.Width = 1000;
+            RtWindow.Height = 650;
             HomeGrid.Visibility = Visibility.Hidden;
             Old.Visibility = Visibility.Visible;
             UpBT.Visibility = Visibility.Visible;
@@ -771,21 +1079,49 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
         /// </summary>
         private void UpBT_Click(object sender, RoutedEventArgs e)
         {
+            RtWindow.Left = WindowStartPosX;
+            RtWindow.Top = WindowStartPosY;
+            RtWindow.Width = 650;
+            RtWindow.Height = 400;
             HomeGrid.Visibility = Visibility.Visible;
             FollowGrid.Visibility = Visibility.Hidden;
             Old.Visibility = Visibility.Hidden;
             UpBT.Visibility = Visibility.Hidden;
         }
         /// <summary>
+        /// 首頁載入
+        /// </summary>
+        private void RtWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowStartPosX = RtWindow.PointToScreen(new System.Windows.Point(0, 0)).X;
+            WindowStartPosY = RtWindow.PointToScreen(new System.Windows.Point(0, 0)).Y;
+        }
+        /// <summary>
         /// DoroonListbox_SelectionChanged
         /// </summary>
         private void DoroonListbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+
             //foreach (var s in DoroonListbox.SelectedItems)
             //{
             //    Console.WriteLine(s);
             //}
+            if (DoroonListbox.SelectedItem != null)
+            {
+                Leader = DoroonListbox.SelectedItem.ToString();
+            }
+            else Leader = "";
+
+            if (DoroonListbox.SelectedIndex != -1)
+            {
+                DoroonFW.IsEnabled = true;
+            }
+            else DoroonFW.IsEnabled = false;
+            Console.WriteLine(DoroonListbox.SelectedIndex);
+            ////Leader = DoroonListbox.SelectedItem.ToString();
+
         }
+
         /// <summary>
         /// DoroonEx_Expanded
         /// </summary>
@@ -793,9 +1129,91 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
         {
             DoroonListbox.Items.Clear();
             //DoroonListbox.SelectedItem = -1;
-            foreach (var s in TcpServer.CLP)
+            foreach (var s in TcpServer.Clisents)
             {
-                DoroonListbox.Items.Add(s.FlightID);
+                DoroonListbox.Items.Add(s.id);
+            }
+
+            if (Leader.Length > 0)
+            {
+                int LederIndex = DoroonListbox.Items.IndexOf(Leader);
+                DoroonListbox.SelectedIndex = LederIndex;                
+            }
+        }
+
+        /// <summary>
+        /// DoroonFW_Expanded
+        /// </summary>
+        private void DoroonFW_Expanded(object sender, RoutedEventArgs e)
+        {
+            DoroonFWListbox.Items.Clear();
+            foreach (var s in TcpServer.Clisents)
+            {
+                //var sa = "#" + ((IPEndPoint)s.socket.RemoteEndPoint).Port.ToString();
+                //string s = "#" + ((IPEndPoint)s.socket.RemoteEndPoint).Port.ToString();
+                if (s.id.ToString() != Leader)
+                {
+                    DoroonFWListbox.Items.Add(s.id);
+                }                
+
+            }
+        }
+
+        /// <summary>
+        /// SLPlusBtFW_Click
+        /// </summary>      
+        private void HPlusBtFW_Click(object sender, RoutedEventArgs e)
+        {
+            RtV.HeightTxFW += double.Parse(HeightTxTBoxFW.Text);
+            TEFW(RtV.HeightTxFW, RtV.WidthTxFW, RtV.AngleTxFW);
+        }
+        private void HDimBtFW_Click(object sender, RoutedEventArgs e)
+        {
+            if (RtV.HeightTxFW > 0)
+            {
+                RtV.HeightTxFW -= double.Parse(HeightTxTBoxFW.Text);
+                TEFW(RtV.HeightTxFW, RtV.WidthTxFW, RtV.AngleTxFW);
+            }
+        }
+        private void WPlusBtFW_Click(object sender, RoutedEventArgs e)
+        {
+            RtV.WidthTxFW += double.Parse(WidthTxTBoxFW.Text);
+            TEFW(RtV.HeightTxFW, RtV.WidthTxFW, RtV.AngleTxFW);
+        }
+        private void WDimBtFW_Click(object sender, RoutedEventArgs e)
+        {
+            if (RtV.WidthTxFW > 0)
+            {
+                RtV.WidthTxFW -= double.Parse(WidthTxTBoxFW.Text);
+                TEFW(RtV.HeightTxFW, RtV.WidthTxFW, RtV.AngleTxFW);
+            }
+        }
+        private void SLPlusBtFW_Click(object sender, RoutedEventArgs e)
+        {
+            RtV.SLTxFW += double.Parse(SLTxTBoxFW.Text);
+            TEFW(RtV.SLTxFW, 0, RtV.AngleTxFW);
+        }
+        private void SLWDimBtFW_Click(object sender, RoutedEventArgs e)
+        {
+            if (RtV.SLTxFW > 0)
+            {
+                RtV.SLTxFW -= double.Parse(SLTxTBoxFW.Text);
+                TEFW(RtV.SLTxFW, 0, RtV.AngleTxFW);
+            }
+        }
+        private void AltPlusBtFW_Click(object sender, RoutedEventArgs e)
+        {
+            RtV.AltTxFW += float.Parse(AltTxTBoxFW.Text);
+            AltSet = true;
+            AltDGRef();
+        }
+        private void AltDimBtFW_Click(object sender, RoutedEventArgs e)
+        {
+            if (RtV.AltTxFW > 0)
+            {
+                RtV.AltTxFW -= float.Parse(AltTxTBoxFW.Text);
+                AltSet = true;
+                AltDGRef();
             }
         }
 

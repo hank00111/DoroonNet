@@ -1,6 +1,7 @@
 ﻿using DoroonNet.DoroonDB;
 using DoroonNet.ViewModel;
 using DoroonNet.Views;
+using GMap.NET;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ namespace DoroonNet.Command
     {
         public int id { get; set; }
         public Socket socket { get; set; }
+        public PointLatLng Pos { get; set; }
     }
 
     public class TcpServer
@@ -180,6 +182,13 @@ namespace DoroonNet.Command
                         RecvCount -= 1;
                         Console.WriteLine("Data Error");
                     }
+
+                    if(bytesRead == 2 && BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("49"))
+                    {
+                        int ClientDataCheck = Clisents.FindIndex(X => X.socket.RemoteEndPoint == handler.RemoteEndPoint);
+                        Clisents[ClientDataCheck].id = memStream.ToArray()[1];
+
+                    }
                     memStream.SetLength(0);
                     //Console.WriteLine("STAR " + BitConverter.ToString(memStream.ToArray()) + " END");
                     //Console.WriteLine("#"+((IPEndPoint)handler.RemoteEndPoint).Port.ToString()+" "+ bytesRead);
@@ -216,14 +225,12 @@ namespace DoroonNet.Command
             //Console.WriteLine(NewCurrentMoveClients);
             return Task.CompletedTask;
         }
-
-        private static byte[] KeepAlive(int onOff, int keepAliveTime, int keepAliveInterval)
+        private static void IDCHG()
         {
-            byte[] buffer = new byte[12];
-            BitConverter.GetBytes(onOff).CopyTo(buffer, 0);
-            BitConverter.GetBytes(keepAliveTime).CopyTo(buffer, 4);
-            BitConverter.GetBytes(keepAliveInterval).CopyTo(buffer, 8);
-            return buffer;
+            foreach(var s in Clisents)
+            {
+                ins.CollectionListPartial[Clients.Count - 1].ID = FlightList.Count;
+            }
         }
 
         #region Send
@@ -299,14 +306,26 @@ namespace DoroonNet.Command
             Buffer.BlockCopy(HeadByte, 0, FinalData, 0, HeadByte.Length);
             Buffer.BlockCopy(ToLByte, 0, FinalData, HeadByte.Length, ToLByte.Length);
             Buffer.BlockCopy(TailByte, 0, FinalData, HeadByte.Length + ToLByte.Length, TailByte.Length);
+
             try
             {
-                if (Clients[Client] != null)
+                if (Clients[Client] != null && Clients.Count == 1)
                 {
                     var ClientHandelr = Clients[Client];
                     ClientHandelr.BeginSend(FinalData, 0, FinalData.Length, 0,
                     new AsyncCallback(SendCallback), ClientHandelr);
                     SendLog($"[{ DateTime.Now.ToString("HH:mm:ss:fffff")}] SendTo#{((IPEndPoint)ClientHandelr.RemoteEndPoint).Port} - CUAV,{TakeoffOrLanding}TUAV\r\n");
+                }
+                else if (Clients[Client] != null && Clients.Count > 1)
+                {
+                    for (int i = 0; i < Clients.Count; i++)
+                    {
+                        //Console.WriteLine(Clients[i]);
+                        var ClientHandelr = Clients[i];
+                        ClientHandelr.BeginSend(FinalData, 0, FinalData.Length, 0,
+                            new AsyncCallback(SendCallback), ClientHandelr);
+                        SendLog($"[{ DateTime.Now.ToString("HH:mm:ss:fffff")}] SendTo#{((IPEndPoint)ClientHandelr.RemoteEndPoint).Port} - CUAV,{TakeoffOrLanding}TUAV\r\n");
+                    }
                 }
             }
             catch
@@ -337,6 +356,7 @@ namespace DoroonNet.Command
                     var ClientHandelr = Clients[Client];
                     ClientHandelr.BeginSend(FinalData, 0, FinalData.Length, 0,
                     new AsyncCallback(SendCallback), ClientHandelr);
+
                     //using (FileStream fs = new FileStream(LogPath + SysOpen + ".txt", FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
                     //{
                     //    using (StreamWriter StreamWriter = new StreamWriter(fs, Encoding.UTF8))
@@ -359,18 +379,91 @@ namespace DoroonNet.Command
 
         }
 
+        public static void SendNAVFW(byte[] NavData,float x,float y,float z, string log, int Mode)
+        {
+            byte[] HeadByte = Mode != 1 ? Encoding.ASCII.GetBytes("GUAV") : Encoding.ASCII.GetBytes("EUAV");
+            byte[] TailByte = Encoding.ASCII.GetBytes("TUAV");
+            int DataLength = HeadByte.Length + NavData.Length + TailByte.Length + 4;
+            byte[] DataLengthByte = BitConverter.GetBytes(DataLength);
+
+            byte[] FinalData = new byte[HeadByte.Length + TailByte.Length + NavData.Length + DataLengthByte.Length];
+            //byte[] OffSetData = new byte[20];
+
+            Buffer.BlockCopy(HeadByte, 0, FinalData, 0, HeadByte.Length);
+            Buffer.BlockCopy(DataLengthByte, 0, FinalData, HeadByte.Length, DataLengthByte.Length);
+            Buffer.BlockCopy(NavData, 0, FinalData, HeadByte.Length + 4, NavData.Length);
+            Buffer.BlockCopy(TailByte, 0, FinalData, HeadByte.Length + NavData.Length + DataLengthByte.Length, TailByte.Length);
+
+
+
+            try
+            {
+                if (Clients != null)
+                {
+                    int ClientLeaderCheck = Clisents.FindIndex(X => X.id == 0);
+                    var ClientHandelr = Clisents[ClientLeaderCheck].socket;
+                    ClientHandelr.BeginSend(FinalData, 0, FinalData.Length, 0,
+                    new AsyncCallback(SendCallback), ClientHandelr);
+                    int zz = 0;
+                    foreach(var H in Clisents)
+                    {
+                        //if()
+                        //byte[] OffSetData = new byte[20];
+                        //Buffer.BlockCopy(Encoding.ASCII.GetBytes("OUAV"), 0, OffSetData, 0, 4);
+                        //Buffer.BlockCopy(BitConverter.GetBytes(x*z), 0, OffSetData, 4, 4);
+                        //Buffer.BlockCopy(BitConverter.GetBytes(y), 0, OffSetData, 8, 4);
+                        //Buffer.BlockCopy(BitConverter.GetBytes(z), 0, OffSetData, 12, 4);
+                        //Buffer.BlockCopy(Encoding.ASCII.GetBytes("TUAV"), 0, OffSetData, 16, 4);
+                        zz++;
+                        int ClientFWCheck = Clisents.FindIndex(X => X.id == zz);
+                        if (ClientFWCheck != -1)
+                         {
+                            //zz++;
+                            byte[] OffSetData = new byte[20];
+                            Buffer.BlockCopy(Encoding.ASCII.GetBytes("OUAV"), 0, OffSetData, 0, 4);
+                            Buffer.BlockCopy(BitConverter.GetBytes(x * zz), 0, OffSetData, 4, 4);
+                            Buffer.BlockCopy(BitConverter.GetBytes(y * zz), 0, OffSetData, 8, 4);
+                            Buffer.BlockCopy(BitConverter.GetBytes(z * zz ), 0, OffSetData, 12, 4);
+                            Buffer.BlockCopy(Encoding.ASCII.GetBytes("TUAV"), 0, OffSetData, 16, 4);
+                            var FwHandelr = Clisents[ClientFWCheck].socket;
+                            FwHandelr.BeginSend(FinalData, 0, FinalData.Length, 0,
+                                new AsyncCallback(SendCallback), FwHandelr);
+                            FwHandelr.BeginSend(OffSetData, 0, OffSetData.Length, 0,
+                                new AsyncCallback(SendCallback), FwHandelr);
+                        }
+                        Console.WriteLine($"ClientFWCheck:{0}", ClientFWCheck);
+                        //break;
+                    }
+
+                    //int FWCheck = Clisents.FindIndex(X => X.id == 2);
+                    //var OffSetHandelr = Clisents[1].socket;
+                    //OffSetHandelr.BeginSend(NavOffSetData, 0, NavOffSetData.Length, 0,
+                    //new AsyncCallback(SendCallback), OffSetHandelr);
+
+
+                    SendLog($"[{ DateTime.Now.ToString("HH:mm:ss:fffff")}] SendTo#{((IPEndPoint)ClientHandelr.RemoteEndPoint).Port} - {BitConverter.ToString(FinalData.ToArray()).Replace("-", string.Empty)}--GUAV+OUAV,{log}TUAV\r\n\r\n");
+                    MessageBox.Show("傳送成功!", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Client 0");
+                MessageBox.Show("傳送錯誤!!\n" + ex, "錯誤", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private static void SendCallback(IAsyncResult ar)
         {
             try
             {
                 Socket handler = (Socket)ar.AsyncState;// Retrieve the socket from the state object.   
                 int bytesSent = handler.EndSend(ar); // Complete sending the data to the remote device.  
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Sent {0} bytes to {1}.", bytesSent, ((IPEndPoint)handler.RemoteEndPoint).Port);
-                Console.ResetColor();
                 if (bytesSent > 1)
                 {
-                    MessageBox.Show("傳送成功!", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //MessageBox.Show("傳送成功!", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Sent {0} bytes to {1}.傳送成功!", bytesSent, ((IPEndPoint)handler.RemoteEndPoint).Port);
+                    Console.ResetColor();
                 }
                 //handler.Shutdown(SocketShutdown.Both);
                 //handler.Close();
@@ -414,8 +507,7 @@ namespace DoroonNet.Command
         {
             XYZChart.IsDisconnect = false;
             try
-            {
-       
+            {                
                 if (LatLngByte.Length == 71 && LatLngByte != null)
                 {
                     byte id = LatLngByte[69];
@@ -440,6 +532,14 @@ namespace DoroonNet.Command
                         double LAT = Math.Round(BitConverter.ToDouble(LatLngByte.Skip(49).Take(8).ToArray(), 0), 12);
                         double LNG = Math.Round(BitConverter.ToDouble(LatLngByte.Skip(57).Take(8).ToArray(), 0), 12);
                         int BAT = BitConverter.ToInt32(LatLngByte.Skip(65).Take(4).ToArray());
+                        //Clisents[id].Pos = new PointLatLng(LAT, LNG);
+
+                        if (LAT != 0)
+                        {
+                            Clisents[id].Pos = new PointLatLng(LAT, LNG);
+                        }
+
+
                         DBFlightData f = new DBFlightData
                         {
                             FlightID = CurrentID,
@@ -476,7 +576,16 @@ namespace DoroonNet.Command
                                 CLP[selClient].FlightLAT = LAT;
                                 CLP[selClient].FlightLNG = LNG;
 
-                                dicFlightData.Add(dicFlightData.Count.ToString(), f);
+                                if (f.latitude != 0)
+                                {
+                                    //int ck = dicFlightData[dicFlightData.Keys.Count - 1].latitude - f.latitude;
+                                    //if (ck > 0.00005)
+                                    //{
+                                    //    Console.WriteLine(ck);
+                                    //}                                    
+                                    dicFlightData.Add(dicFlightData.Count.ToString(), f);
+                                }
+                                
                                 if (dicFlightData.Count > 60)
                                 {
                                     //foreach (KeyValuePair<string, FlightData> v in dicFlightData)            
