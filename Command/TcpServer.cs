@@ -696,7 +696,6 @@ namespace DoroonNet.Command
             MainWindow.DelegateDelAircraftObj.Invoke(NewCurrentMoveClients, DBid);
             ConSoPt.ConsoPrint("#" + ((IPEndPoint)handler.RemoteEndPoint).Port.ToString() + " Disconnect");
         }
-
         public static void BigBytes(MemoryStream mem, int bytesRead, Socket handler)
         {
             int ClientDataCheck = Clients.IndexOf(Clients.FirstOrDefault(X => X.RemoteEndPoint == handler.RemoteEndPoint));

@@ -6,6 +6,7 @@ using GMap.NET.MapProviders;
 using GMap.NET.WindowsPresentation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net;
@@ -31,6 +32,7 @@ namespace DoroonNet.RouteView
     {
         //private int t = 0;
         private byte[] NavPtData, NavOffSetData;
+        private int MapSel = 0;
         private bool AltSet;
         private bool GoHome;
         private bool ComBoXIsLoad, ComBoXIsLoadFW;
@@ -356,10 +358,11 @@ namespace DoroonNet.RouteView
             PlanMap.MaxZoom = 30;
             PlanMap.MinZoom = 10;
             PlanMap.Zoom = 20;
-            //TEFW(RtV.HeightTx, RtV.WidthTx, RtV.AngleTx);
+            TEFW(RtV.HeightTx, RtV.WidthTx, RtV.AngleTx);
         }
         private void PlanMap_OnMapDrag()
         {
+            MapSel = 1;
             switch (ComboBoxFW.SelectedIndex)
             {
                 case 0:
@@ -379,14 +382,16 @@ namespace DoroonNet.RouteView
             {
                 if (ComboBoxFW.SelectedIndex == 0 || ComboBoxFW.SelectedIndex == 2)
                 {
-                    //REct.Visibility = Visibility.Visible;
-                    //EQtriangle.Visibility = Visibility.Collapsed;
+                    RectFW.Visibility = Visibility.Visible;
+                    EilFW.Visibility = Visibility.Visible;
+                    EQtriangleFW.Visibility = Visibility.Collapsed;
                     TEFW(RtV.HeightTxFW, RtV.WidthTxFW, 0);
                 }
                 else
                 {
-                    //EQtriangle.Visibility = Visibility.Visible;
-                    //REct.Visibility = Visibility.Collapsed;
+                    EQtriangleFW.Visibility = Visibility.Visible;
+                    RectFW.Visibility = Visibility.Collapsed;
+                    EilFW.Visibility = Visibility.Collapsed;
                     TEFW(RtV.SLTxFW, 0, RtV.AngleTxFW);
                 }
             }
@@ -401,15 +406,28 @@ namespace DoroonNet.RouteView
             switch (ComboBoxFW.SelectedIndex)
             {
                 case 0:
+                    if (NavPtDataGridFW.Visibility == Visibility.Hidden)
+                    {
+                        NavPtDataGridFW.Visibility = Visibility.Visible;
+                    }
                     Rectangle(PlanMap.Position, h, w, angle, 1);
                     break;
                 case 1:
+                    if (NavPtDataGridFW.Visibility == Visibility.Hidden)
+                    {
+                        NavPtDataGridFW.Visibility = Visibility.Visible;
+                    }
                     Triangle(PlanMap.Position, h, angle, 1);
                     break;
                 case 2:
+                    if (NavPtDataGridFW.Visibility == Visibility.Visible)
+                    {
+                        NavPtDataGridFW.Visibility = Visibility.Hidden;
+                    }
                     Ellipse(PlanMap.Position, h, w, angle, 1);
                     break;
             }
+            //AltDGRef();
         }
         private byte[] OffSetC()
         {
@@ -433,8 +451,6 @@ namespace DoroonNet.RouteView
         //{
 
         //}
-
-
         /// <summary>
         /// OldMap
         /// </summary>
@@ -451,6 +467,7 @@ namespace DoroonNet.RouteView
         }
         private void RtMap_OnMapDrag()
         {
+            MapSel = 0;
             switch (ComBoBoX.SelectedIndex)
             {
                 case 0:
@@ -489,20 +506,34 @@ namespace DoroonNet.RouteView
         }
         private void RefData(object sender, EventArgs e)
         {
-            foreach (var data in NavPt)
+
+            if (MapSel == 0)
             {
-                data.ALT = RtV.AltTxFW;
-                //data.ALT = RtV.AltTx;
+                foreach (var data in NavPt)
+                {                    
+                    data.ALT = RtV.AltTx;
+                }
+                AltSet = false;
+                NavPtDataGrid.ItemsSource = null;
+                NavPtDataGrid.ItemsSource = NavPt;  
+                NavPtDataGrid.Height = STP.ActualHeight / 2;    
             }
-            AltSet = false;
-            NavPtDataGrid.ItemsSource = null;
-            NavPtDataGrid.ItemsSource = NavPt;
-            NavPtDataGridFW.ItemsSource = null;
-            NavPtDataGridFW.ItemsSource = NavPt;
+            else
+            {
+                foreach (var data in NavPt)
+                {
+                    data.ALT = RtV.AltTxFW;
+                }
+                AltSet = false;
+                NavPtDataGridFW.ItemsSource = null;
+                NavPtDataGridFW.ItemsSource = NavPt;
+                if (NavPtDataGridFW.Visibility == Visibility.Visible)
+                {
+                    NavPtDataGridFW.Height = STPFW.ActualHeight / 1.5;
+                }
+                
+            }
 
-
-            NavPtDataGrid.Height = STP.ActualHeight / 2;
-            NavPtDataGridFW.Height = STPFW.ActualHeight / 1.5;
             Ref.Stop();
         }
 
@@ -787,6 +818,9 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
             GMapRoute gmRoute = new GMapRoute(ElliPoint);//
             gmRoute.Shape = new System.Windows.Shapes.Path() { Stroke = new SolidColorBrush(Colors.Yellow), StrokeThickness = 2 };
             gmRoute.Tag = "Route";
+
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
             if (mode == 0)
             {
                 NavPtDataGrid.ItemsSource = null;
@@ -811,6 +845,7 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
             {
                 //NavPtDataGridFW.ItemsSource = null;
                 //NavPtDataGridFW.ItemsSource = NavPt;
+                //AltDGRef();
                 GMapMarker Route = PlanMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "Route");
                 if (Route != null)
                 {
@@ -827,6 +862,11 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
                     PlanMap.Markers.Add(gmRoute);
                 }
             }
+            stopWatch.Stop();
+            TimeSpan ts = stopWatch.Elapsed;
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+            Console.WriteLine("RunTime " + elapsedTime +" "+ NavPt.Count);
 
 
             #region

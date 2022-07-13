@@ -139,7 +139,7 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <!--#region 選擇框-->
-                            <ComboBox x:Name="ComboBoxFW" FontSize="17" Margin="5,0,0,0" SelectedIndex="1" 
+                            <ComboBox x:Name="ComboBoxFW" FontSize="17" Margin="5,0,0,0" SelectedIndex="0" 
                                       Style="{StaticResource MahApps.Styles.ComboBox}" SelectionChanged="ComboBoxFW_SelectionChanged" Loaded="ComboBoxFW_Loaded">
                                 <ComboBoxItem Content="矩形"/>
                                 <ComboBoxItem Content="正三角形"/>
@@ -193,7 +193,7 @@
                                 <!--#endregion-->
 
                                 <!--#region 正三角形 EQtriangle-->
-                                <StackPanel x:Name="EQtriangleFW" Orientation="Horizontal" Margin="0,5,0,0" Visibility="Visible">
+                                <StackPanel x:Name="EQtriangleFW" Orientation="Horizontal" Margin="0,5,0,0" Visibility="Collapsed">
                                     <Label Content="邊長:" Foreground="#DDFFFFFF" FontSize="18"/>
                                     <Label x:Name="SLTxTFW" 
                                            Content="{Binding SLTxFW, UpdateSourceTrigger=PropertyChanged}"
