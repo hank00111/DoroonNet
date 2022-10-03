@@ -259,6 +259,8 @@ namespace DoroonNet
         public static DelegateDelAircraft DelegateDelAircraftObj;
         public delegate void DelegateRouteChange(int MarkerID, int DBID);
         public static DelegateRouteChange DelegateRouteChangeObj;
+        public delegate void DelegateRouteMove();
+        public static DelegateRouteMove DelegateRouteMoveObj;
 
         private bool mapRender = false;
         private bool isMouseDown;
@@ -299,7 +301,7 @@ namespace DoroonNet
             if (i == 0)
             {
                 DroneLoc_loop = new DispatcherTimer();
-                DroneLoc_loop.Interval = TimeSpan.FromMilliseconds(100);
+                DroneLoc_loop.Interval = TimeSpan.FromMilliseconds(250);
                 DroneLoc_loop.Tick += DroneLocation_loop;
                 DroneLoc_loop.Start();
             }
@@ -309,6 +311,7 @@ namespace DoroonNet
             DelegateDelAircraftObj = AircraftDel;
             DelegateAddAircraftObj = AircraftAdd;
             DelegateRouteChangeObj = MoveRouteChange;
+            DelegateRouteMoveObj = MultiRoute;
         }
 
         private void MainMap_MouseMove(object sender, MouseEventArgs e)
@@ -468,7 +471,7 @@ namespace DoroonNet
                         revolve.Position = new PointLatLng(loc_x, loc_y);
                         //ins.CollectionListPartial[currentMoveClients].FlightLAT ins.CollectionListPartial[currentMoveClients].FlightLNG
                         p.M_DroneMarker_Angle(hdg);
-                        MultiRoute();
+                        //MultiRoute();
                         //MoveRoute();
                         mapRender = false;
                     }
@@ -538,20 +541,21 @@ namespace DoroonNet
         {
             int pos = 0;
             foreach (var s in TcpServer.CLP)
-            {                
+            {
                 int a = s.ID;
                 //GMapMarker ClearRT = MainMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "Route");
                 List<PointLatLng> FlightDataGPS = DoroonSQLLiteDB.DelegateFlightDataGPSObj.Invoke(a);
-                GMapRoute DoroonRoute = new GMapRoute(FlightDataGPS);                
+                GMapRoute DoroonRoute = new GMapRoute(FlightDataGPS);
                 DoroonRoute.Shape = new System.Windows.Shapes.Path() { Stroke = new SolidColorBrush(colorsSW(pos)), StrokeThickness = 2 };
                 DoroonRoute.Tag = "Route" + pos;
+
                 GMapMarker RouteMk = MainMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "Route" + pos);
 
                 if (RouteMk != null)
                 {
-                    int x = MainMap.Markers.IndexOf(MainMap.Markers.FirstOrDefault(u => u.Tag.ToString() == "Route"));
+                    //int x = MainMap.Markers.IndexOf(MainMap.Markers.FirstOrDefault(u => u.Tag.ToString() == "Route" + pos));
                     MainMap.Markers.Remove(RouteMk);
-                    MainMap.Markers.Add(RouteMk);
+                    MainMap.Markers.Add(DoroonRoute);
                     //Console.WriteLine(x);
                     //Route = new GMapRoute(MoveHistory);
                     //Route.Shape = new System.Windows.Shapes.Path() { Stroke = new SolidColorBrush(Colors.Yellow), StrokeThickness = 2 };
@@ -559,11 +563,11 @@ namespace DoroonNet
                 }
                 else
                 {
-                    MainMap.Markers.Add(RouteMk);
+                    MainMap.Markers.Add(DoroonRoute);
                 }
 
                 pos++;
-                Console.WriteLine(a);
+                //Console.WriteLine(a);
             }
         }
 
@@ -577,6 +581,9 @@ namespace DoroonNet
                     break;
                 case 1:
                     co = Colors.Cyan;
+                    break;
+                case 2:
+                    co = Colors.Blue;
                     break;
             }
 
@@ -665,7 +672,7 @@ namespace DoroonNet
                 }
                 else
                 {
-                    GMapMarker ClearRT = MainMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() == "Route");
+                    GMapMarker ClearRT = MainMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString().StartsWith("Route"));
                     GMapMarker ClearDrone = MainMap.Markers.Where(u => u.Tag != null).FirstOrDefault(u => u.Tag.ToString() != "Ground");
                     if (ClearRT != null)
                     {

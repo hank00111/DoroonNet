@@ -309,24 +309,49 @@ namespace DoroonNet.Command
 
             try
             {
-                if (Clients[Client] != null && Clients.Count == 1)
+                if (TakeoffOrLanding == 1)
                 {
-                    var ClientHandelr = Clients[Client];
-                    ClientHandelr.BeginSend(FinalData, 0, FinalData.Length, 0,
-                    new AsyncCallback(SendCallback), ClientHandelr);
-                    SendLog($"[{ DateTime.Now.ToString("HH:mm:ss:fffff")}] SendTo#{((IPEndPoint)ClientHandelr.RemoteEndPoint).Port} - CUAV,{TakeoffOrLanding}TUAV\r\n");
-                }
-                else if (Clients[Client] != null && Clients.Count > 1)
-                {
-                    for (int i = 0; i < Clients.Count; i++)
+                    if (Clients[Client] != null && Clients.Count == 1)
                     {
-                        //Console.WriteLine(Clients[i]);
-                        var ClientHandelr = Clients[i];
+                        var ClientHandelr = Clients[Client];
                         ClientHandelr.BeginSend(FinalData, 0, FinalData.Length, 0,
-                            new AsyncCallback(SendCallback), ClientHandelr);
+                        new AsyncCallback(SendCallback), ClientHandelr);
                         SendLog($"[{ DateTime.Now.ToString("HH:mm:ss:fffff")}] SendTo#{((IPEndPoint)ClientHandelr.RemoteEndPoint).Port} - CUAV,{TakeoffOrLanding}TUAV\r\n");
                     }
+                    else if (Clients[Client] != null && Clients.Count > 1)
+                    {
+                        for (int i = 0; i < Clients.Count; i++)
+                        {
+                            //Console.WriteLine(Clients[i]);
+                            var ClientHandelr = Clients[i];
+                            ClientHandelr.BeginSend(FinalData, 0, FinalData.Length, 0,
+                                new AsyncCallback(SendCallback), ClientHandelr);
+                            SendLog($"[{ DateTime.Now.ToString("HH:mm:ss:fffff")}] SendTo#{((IPEndPoint)ClientHandelr.RemoteEndPoint).Port} - CUAV,{TakeoffOrLanding}TUAV\r\n");
+                        }
+                    }
                 }
+                else if (TakeoffOrLanding == 2)
+                {
+                    if (Clients[Client] != null && Clients.Count == 1)
+                    {
+                        var ClientHandelr = Clients[Client];
+                        ClientHandelr.BeginSend(FinalData, 0, FinalData.Length, 0,
+                        new AsyncCallback(SendCallback), ClientHandelr);
+                        SendLog($"[{ DateTime.Now.ToString("HH:mm:ss:fffff")}] SendTo#{((IPEndPoint)ClientHandelr.RemoteEndPoint).Port} - CUAV,{TakeoffOrLanding}TUAV\r\n");
+                    }
+                    else if (Clients[Client] != null && Clients.Count > 1)
+                    {
+                        for (int i = 0; i < Clients.Count; i++)
+                        {
+                            //Console.WriteLine(Clients[i]);
+                            var ClientHandelr = Clients[i];
+                            ClientHandelr.BeginSend(FinalData, 0, FinalData.Length, 0,
+                                new AsyncCallback(SendCallback), ClientHandelr);
+                            SendLog($"[{ DateTime.Now.ToString("HH:mm:ss:fffff")}] SendTo#{((IPEndPoint)ClientHandelr.RemoteEndPoint).Port} - CUAV,{TakeoffOrLanding}TUAV\r\n");
+                        }
+                    }
+                }
+
             }
             catch
             {
@@ -512,6 +537,7 @@ namespace DoroonNet.Command
                 {
                     byte id = LatLngByte[69];
                     int selClient = Clisents.FindIndex(X => X.id == id);
+                    //Console.WriteLine($"ID:{id} Sel:{selClient}");
                     if (id == selClient)
                     {
                         List<FlightListData> FindID = FlightList.FindAll(x => int.Parse(x.linkid) == ((IPEndPoint)Clisents[selClient].socket.RemoteEndPoint).Port);

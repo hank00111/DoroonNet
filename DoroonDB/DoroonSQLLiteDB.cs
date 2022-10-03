@@ -292,7 +292,6 @@ namespace DoroonNet.DoroonDB
             stopWatch.Start();
             string Insertsql;
 
-
             using (var transaction = sqlite_conn.BeginTransaction())
             {
                 using (var command = sqlite_conn.CreateCommand())
@@ -343,6 +342,8 @@ namespace DoroonNet.DoroonDB
 
                 transaction.Commit();
             }
+            MainWindow.DelegateRouteMoveObj.Invoke();
+            //DelegateRouteMoveObj
 
             return Task.CompletedTask;
         }

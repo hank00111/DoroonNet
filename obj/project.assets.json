@@ -1612,19 +1612,21 @@
   },
   "packageFolders": {
     "C:\\Users\\001\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.2.1224",
     "restore": {
-      "projectUniqueName": "D:\\Code\\DoroonNet\\DoroonNet.csproj",
+      "projectUniqueName": "E:\\Program\\DoroonNet\\DoroonNet.csproj",
       "projectName": "DoroonNet",
-      "projectPath": "D:\\Code\\DoroonNet\\DoroonNet.csproj",
+      "projectPath": "E:\\Program\\DoroonNet\\DoroonNet.csproj",
       "packagesPath": "C:\\Users\\001\\.nuget\\packages\\",
-      "outputPath": "D:\\Code\\DoroonNet\\obj\\",
+      "outputPath": "E:\\Program\\DoroonNet\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
         "C:\\Users\\001\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -1701,7 +1703,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.405\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

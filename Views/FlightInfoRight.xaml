@@ -14,8 +14,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="AUTO"/>
             <RowDefinition Height="AUTO"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock x:Name="ImageShowID" Text="{Binding ImageID, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" FontSize="14" HorizontalAlignment="Center" FontFamily="Roboto" Foreground="Wheat" Visibility="Collapsed"/>
@@ -24,9 +24,11 @@
         <ComboBox x:Name="UavCombo" Grid.Row="0" Grid.Column="1" Style="{DynamicResource MahApps.Styles.ComboBox}" Margin="0,0,0,2"/>
         <Button Grid.Row="1" Grid.Column="0" Content="TAKEOFF" Click="TAKEOFF_Click" FontWeight="Bold" />
         <Button Grid.Row="1" Grid.Column="1" Content="LANDING" Click="LANDING_Click" FontWeight="Bold"/>
-        <Button Grid.Row="2" Grid.Column="0" Content="CAM Open" Click="CAM_ON_Click" FontWeight="Bold"/>
-        <Button Grid.Row="2" Grid.Column="1" Content="CAM Close" Click="CAM_OFF_Click" FontWeight="Bold"/>
-        <ListView Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="2" ItemsSource="{Binding CollectionListPartial, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" >            
+        <Button Grid.Row="2" Grid.Column="0" Content="TASK START" FontWeight="Bold" Click="TASK_START_Click"/>
+        <Button Grid.Row="2" Grid.Column="1" Content="" FontWeight="Bold"/>
+        <Button Grid.Row="3" Grid.Column="0" Content="CAM Open" Click="CAM_ON_Click" FontWeight="Bold"/>
+        <Button Grid.Row="3" Grid.Column="1" Content="CAM Close" Click="CAM_OFF_Click" FontWeight="Bold"/>
+        <ListView Grid.Row="4" Grid.ColumnSpan="2" Grid.RowSpan="2" ItemsSource="{Binding CollectionListPartial, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" >            
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">

@@ -133,7 +133,25 @@ namespace DoroonNet.Views
                 MessageBox.Show(ex.ToString());
             }
         }
-
+        private void TASK_START_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (UavCombo.SelectedIndex == -1)
+                {
+                    MessageBox.Show("請選擇無人機，以發送起飛指令");
+                    return;
+                }
+                else
+                {
+                    TcpServer.SendControl(UavCombo.SelectedIndex, 2);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
 
         private void LANDING_Click(object sender, RoutedEventArgs e)
         {
@@ -154,7 +172,6 @@ namespace DoroonNet.Views
                 MessageBox.Show(ex.ToString());
             }
         }
-
 
     }
 
