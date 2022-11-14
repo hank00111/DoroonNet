@@ -32,7 +32,6 @@ E:\Program\DoroonNet\bin\Release\net5.0-windows\runtimes\win-x86\native\SQLite.I
 E:\Program\DoroonNet\bin\Release\net5.0-windows\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
 E:\Program\DoroonNet\bin\Release\net5.0-windows\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
 E:\Program\DoroonNet\obj\Release\net5.0-windows\DoroonNet.csproj.AssemblyReference.cache
-E:\Program\DoroonNet\obj\Release\net5.0-windows\Resources\CustomThemes.baml
 E:\Program\DoroonNet\obj\Release\net5.0-windows\Resources\ListView.baml
 E:\Program\DoroonNet\obj\Release\net5.0-windows\DoroonDB\DBHome.g.cs
 E:\Program\DoroonNet\obj\Release\net5.0-windows\MainWindow.g.cs
@@ -74,3 +73,10 @@ E:\Program\DoroonNet\obj\Release\net5.0-windows\RouteView\RtView.g.cs
 E:\Program\DoroonNet\obj\Release\net5.0-windows\NavView\Nav.baml
 E:\Program\DoroonNet\obj\Release\net5.0-windows\RouteView\RtView.baml
 E:\Program\DoroonNet\bin\Release\net5.0-windows\Geolocation.dll
+E:\Program\DoroonNet\bin\Release\net5.0-windows\DoroonNet.dll.config
+E:\Program\DoroonNet\obj\Release\net5.0-windows\Resources\NavMarker.g.cs
+E:\Program\DoroonNet\obj\Release\net5.0-windows\Views\FlightInfo2.g.cs
+E:\Program\DoroonNet\obj\Release\net5.0-windows\Views\SYS.g.cs
+E:\Program\DoroonNet\obj\Release\net5.0-windows\Resources\NavMarker.baml
+E:\Program\DoroonNet\obj\Release\net5.0-windows\Views\FlightInfo2.baml
+E:\Program\DoroonNet\obj\Release\net5.0-windows\Views\SYS.baml

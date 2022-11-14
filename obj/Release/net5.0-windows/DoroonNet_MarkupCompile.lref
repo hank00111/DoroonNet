@@ -1,4 +1,4 @@
-﻿
+﻿E:\Program\DoroonNet\obj\Release\net5.0-windows\GeneratedInternalTypeHelper.g.cs
 FE:\Program\DoroonNet\App.xaml;;
 FE:\Program\DoroonNet\DoroonDB\DBHome.xaml;;
 FE:\Program\DoroonNet\MainWindow.xaml;;
@@ -6,10 +6,13 @@ FE:\Program\DoroonNet\NavView\Nav.xaml;;
 FE:\Program\DoroonNet\Resources\CustomMarker.xaml;;
 FE:\Program\DoroonNet\Resources\GroundMarker.xaml;;
 FE:\Program\DoroonNet\Resources\M_DroneMarker.xaml;;
+FE:\Program\DoroonNet\Resources\NavMarker.xaml;;
 FE:\Program\DoroonNet\RouteView\RtView.xaml;;
 FE:\Program\DoroonNet\Views\FlightInfo.xaml;;
+FE:\Program\DoroonNet\Views\FlightInfo2.xaml;;
 FE:\Program\DoroonNet\Views\FlightInfoRight.xaml;;
 FE:\Program\DoroonNet\Views\LiveChart.xaml;;
 FE:\Program\DoroonNet\Views\QuickSettings.xaml;;
+FE:\Program\DoroonNet\Views\SYS.xaml;;
 FE:\Program\DoroonNet\Views\XYZChart.xaml;;
 

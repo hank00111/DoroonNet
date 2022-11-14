@@ -10,11 +10,11 @@ none
 false
 TRACE;RELEASE;NET;NET5_0;NETCOREAPP
 E:\Program\DoroonNet\App.xaml
-141647080958
+16-1425482045
 
-321588967410
-219-1706899329
-DoroonDB\DBHome.xaml;MainWindow.xaml;NavView\Nav.xaml;Resources\CustomMarker.xaml;Resources\CustomThemes.xaml;Resources\GroundMarker.xaml;Resources\ListView.xaml;Resources\M_DroneMarker.xaml;RouteView\RtView.xaml;Views\FlightInfo.xaml;Views\FlightInfoRight.xaml;Views\LiveChart.xaml;Views\QuickSettings.xaml;Views\XYZChart.xaml;
+35-1644373449
+219-810541268
+DoroonDB\DBHome.xaml;MainWindow.xaml;NavView\Nav.xaml;Resources\CustomMarker.xaml;Resources\GroundMarker.xaml;Resources\ListView.xaml;Resources\M_DroneMarker.xaml;Resources\NavMarker.xaml;RouteView\RtView.xaml;Views\FlightInfo.xaml;Views\FlightInfo2.xaml;Views\FlightInfoRight.xaml;Views\LiveChart.xaml;Views\QuickSettings.xaml;Views\SYS.xaml;Views\XYZChart.xaml;
 
-True
+False
 
