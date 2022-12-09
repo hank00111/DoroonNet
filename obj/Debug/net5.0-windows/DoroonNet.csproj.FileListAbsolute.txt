@@ -86,7 +86,6 @@ D:\Code\DoroonNet\bin\Debug\net5.0-windows\DoroonNet.deps.json
 D:\Code\DoroonNet\bin\Debug\net5.0-windows\DoroonNet.runtimeconfig.json
 D:\Code\DoroonNet\bin\Debug\net5.0-windows\DoroonNet.runtimeconfig.dev.json
 D:\Code\DoroonNet\bin\Debug\net5.0-windows\DoroonNet.dll
-D:\Code\DoroonNet\bin\Debug\net5.0-windows\ref\DoroonNet.dll
 D:\Code\DoroonNet\bin\Debug\net5.0-windows\DoroonNet.pdb
 D:\Code\DoroonNet\bin\Debug\net5.0-windows\ControlzEx.dll
 D:\Code\DoroonNet\bin\Debug\net5.0-windows\CsvHelper.dll
@@ -162,3 +161,4 @@ D:\Code\DoroonNet\obj\Debug\net5.0-windows\DoroonNet.dll
 D:\Code\DoroonNet\obj\Debug\net5.0-windows\ref\DoroonNet.dll
 D:\Code\DoroonNet\obj\Debug\net5.0-windows\DoroonNet.pdb
 D:\Code\DoroonNet\obj\Debug\net5.0-windows\DoroonNet.genruntimeconfig.cache
+D:\Code\DoroonNet\obj\Debug\net5.0-windows\refint\DoroonNet.dll

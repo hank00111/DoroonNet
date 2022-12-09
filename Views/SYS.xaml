@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:DoroonNet.Views"
         mc:Ignorable="d"
         Title="SYS" Height="650" Width="1000">
-    <Grid>
-        <WpfPlot x:Name="FK" MouseMove="FK_MouseMove"/>
+    <Grid Background="#FF444444">
+        <Button x:Name="UDPTestBT" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0" Style="{DynamicResource MahApps.Styles.Button.Flat}" Width="120" Height="40" FontSize="20" Click="UDPTestBT_Click">UDP測試</Button>
+        <!--<WpfPlot x:Name="FK" MouseMove="FK_MouseMove"/>-->
     </Grid>
 </Window>

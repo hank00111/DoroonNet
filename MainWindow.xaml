@@ -16,6 +16,9 @@
         WindowStartupLocation="CenterScreen"  WindowState="Maximized" KeyDown="Window_KeyDown" KeyUp="Window_Keyup" Closing="MetroWindow_Closing">
     <mah:MetroWindow.Resources>
         <SolidColorBrush x:Key="MahApps.Brushes.MenuItem.SelectionFill" Color="White" />
+        <ContextMenu x:Key="ContextMenu">
+            <MenuItem Name="NewFile" Header="群組設定"/>              
+        </ContextMenu>
     </mah:MetroWindow.Resources>    
     <Grid>
         <Grid.RowDefinitions>
@@ -46,7 +49,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <!--#region GMap -->
-                <gmaps:GMapControl Grid.Row="0" x:Name="MainMap" Panel.ZIndex="0" Loaded="MainMap_Loaded" MouseMove="MainMap_MouseMove" MouseLeftButtonDown="MainMap_MouseLeftButtonDown" />
+                <gmaps:GMapControl Grid.Row="0" x:Name="MainMap" Panel.ZIndex="0" Loaded="MainMap_Loaded" MouseMove="MainMap_MouseMove" MouseLeftButtonDown="MainMap_MouseLeftButtonDown" ContextMenu="{StaticResource ContextMenu}"/>
                 <!--#endregion-->
 
                 <!--#region OnGmapFps-->

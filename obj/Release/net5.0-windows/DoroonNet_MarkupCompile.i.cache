@@ -4,17 +4,17 @@
 exe
 C#
 .cs
-E:\Program\DoroonNet\obj\Release\net5.0-windows\
+D:\Code\DoroonNet\obj\Release\net5.0-windows\
 DoroonNet
 none
 false
 TRACE;RELEASE;NET;NET5_0;NETCOREAPP
-E:\Program\DoroonNet\App.xaml
+D:\Code\DoroonNet\App.xaml
 16-1425482045
 
 35-1644373449
-219-810541268
+219-1706899329
 DoroonDB\DBHome.xaml;MainWindow.xaml;NavView\Nav.xaml;Resources\CustomMarker.xaml;Resources\GroundMarker.xaml;Resources\ListView.xaml;Resources\M_DroneMarker.xaml;Resources\NavMarker.xaml;RouteView\RtView.xaml;Views\FlightInfo.xaml;Views\FlightInfo2.xaml;Views\FlightInfoRight.xaml;Views\LiveChart.xaml;Views\QuickSettings.xaml;Views\SYS.xaml;Views\XYZChart.xaml;
 
-False
+True
 

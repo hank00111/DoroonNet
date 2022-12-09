@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DoroonNet.Views;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -136,7 +137,16 @@ namespace DoroonNet.Command
                     //memStream.Flush();
                     #endregion
 
-                    ImageConverterV2.HexTXTbufferV2(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty));
+                    if(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("537A547A4E"))
+                    {
+                        
+                        Console.WriteLine($"{DateTime.Now.Ticks}-R");
+                        Thread.Sleep(800);
+                        SYS.RecvTicks.Add(DateTime.Now.Ticks);
+                        //Thread.Sleep(1000);
+                    }
+
+                    //ImageConverterV2.HexTXTbufferV2(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty));
                     memStream.SetLength(0);
                    
                 }

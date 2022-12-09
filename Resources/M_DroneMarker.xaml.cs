@@ -45,6 +45,9 @@ namespace DoroonNet.Resources
             InitializeComponent();
 
             iaC = icon;
+            
+            FlightMark.Brush = new SolidColorBrush(Colors.Yellow);
+
             //Poup = new Popup();
             //DroneControl.Label = new Label();
             //_label = new Label();
@@ -70,6 +73,7 @@ namespace DoroonNet.Resources
             IdText.Text = title.ToString();
             MarkerID = ID;
             DBid = DBID;
+            M_DroneMarker_Func.DroneImages.Add(icon);
             //textBlock.Text = "asd";
             //textBlock.Height = 30;
             //textBlock.Width = 45;
@@ -137,7 +141,8 @@ namespace DoroonNet.Resources
 
     public class M_DroneMarker_Func
     {
-        public void M_DroneMarker_Angle(int Angle)
+        public static List<Image> DroneImages = new List<Image>();
+        public static void M_DroneMarker_Angle(int Angle)
         {
             //int i = 0;
             RotateTransform rotateTransform = new RotateTransform(Angle);

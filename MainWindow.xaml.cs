@@ -292,6 +292,8 @@ namespace DoroonNet
             // lets the user drag the map with the left mouse button
             MainMap.DragButton = MouseButton.Right;
 
+            MainMap.DragButton = MouseButton.Left;
+
             GroundMarker();
             //DroneLocation();
             //ThreadPool.QueueUserWorkItem(DroneLocation_loop);
@@ -458,7 +460,7 @@ namespace DoroonNet
 
         private Task DroneLocation_Move(double loc_x, double loc_y, int hdg, int currentMoveClients)
         {
-            M_DroneMarker_Func p = new M_DroneMarker_Func();
+            //M_DroneMarker_Func p = new M_DroneMarker_Func();
             Dispatcher.BeginInvoke(new Action(() =>
             {
                 try
@@ -469,8 +471,11 @@ namespace DoroonNet
                         GMapMarker revolve = MainMap.Markers.ElementAt(currentMoveClients);//currentMoveClients
                         //Console.WriteLine(MainMap.Markers.IndexOf(MainMap.Markers.FirstOrDefault(u => u.Tag.ToString() == currentMoveClients)));
                         revolve.Position = new PointLatLng(loc_x, loc_y);
+
+
                         //ins.CollectionListPartial[currentMoveClients].FlightLAT ins.CollectionListPartial[currentMoveClients].FlightLNG
-                        p.M_DroneMarker_Angle(hdg);
+                        M_DroneMarker_Func.M_DroneMarker_Angle(hdg);
+                        
                         //MultiRoute();
                         //MoveRoute();
                         mapRender = false;
@@ -589,7 +594,6 @@ namespace DoroonNet
 
             return co;
         }
-
 
         private void NavPlanning()
         {

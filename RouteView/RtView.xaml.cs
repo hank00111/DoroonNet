@@ -226,6 +226,12 @@ namespace DoroonNet.RouteView
             int Mode = 0;
             GoHome = true;
 
+            if (DoroonListbox.Items.Count < 2)
+            {
+                MessageBox.Show("群飛數不足請使用一般模式規劃!!", "錯誤", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             switch (ComboBoxFW.SelectedIndex)
             {
                 case 0:
@@ -1179,6 +1185,9 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
                 int LederIndex = DoroonListbox.Items.IndexOf(Leader);
                 DoroonListbox.SelectedIndex = LederIndex;                
             }
+
+            
+
         }
 
         /// <summary>
