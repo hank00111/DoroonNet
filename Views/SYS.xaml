@@ -7,7 +7,10 @@
         mc:Ignorable="d"
         Title="SYS" Height="650" Width="1000">
     <Grid Background="#FF444444">
-        <Button x:Name="UDPTestBT" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0" Style="{DynamicResource MahApps.Styles.Button.Flat}" Width="120" Height="40" FontSize="20" Click="UDPTestBT_Click">UDP測試</Button>
+        <Button x:Name="UDPTestBT" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0" Style="{DynamicResource MahApps.Styles.Button.Flat}" Width="250" Height="40" FontSize="20" Click="UDPTestBT_Click"  Content="UDP Latency 計算/重設"/>
+        <TextBox x:Name="SendSpeedTextBox" VerticalAlignment="Top" HorizontalAlignment="Left"  Margin="270,10,0,0" Width="85" Height="40" Style="{StaticResource MahApps.Styles.Control.WindowCommands}" Foreground="White" FontSize="20" Opacity="1" CaretBrush="White" />
+        <Button x:Name="SetSpeedBT" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="365,10,0,0" Style="{DynamicResource MahApps.Styles.Button.Flat}" Width="100" Height="40" FontSize="20" Content="設定速度" Click="SetSpeedBT_Click"/>
+        <Label x:Name="SpeedLabel" Content="發送速度:0 ms" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="470,10,0,0"  Height="40" VerticalContentAlignment="Center" FontSize="20" />
         <!--<WpfPlot x:Name="FK" MouseMove="FK_MouseMove"/>-->
     </Grid>
 </Window>

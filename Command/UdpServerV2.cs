@@ -97,11 +97,84 @@ namespace DoroonNet.Command
             Socket S = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             S.Bind(new IPEndPoint(IPAddress.Any, 0));
             Socket past = State.WorkSocket;
-            State.WorkSocket = S;       
+            State.WorkSocket = S;
             
             try
             {
                 bytes = past.EndReceiveFrom(Result, ref RemoteIpEndPoint);
+
+                if (bytes > 0)
+                {
+                    State.sb.Append(BitConverter.ToString(State.buffer, 0, bytes));
+                    memStream.Write(State.buffer, 0, bytes);
+                    Next.Set();
+                    try
+                    {
+                        FlightInfoRightCommand FIRC = new FlightInfoRightCommand() { ImageID = (RemoteIpEndPoint as IPEndPoint).Port.ToString() };
+                        #region old
+                        //if (BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("537A547A4E"))
+                        //{
+                        //    revbyte += 1;
+                        //    //Console.WriteLine(revbyte);
+                        //    ImageConverter.HexWriterTxtAsync(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty));
+                        //    ConSoPt.ConsoPrint(revbyte.ToString()+" "+(RemoteIpEndPoint as IPEndPoint).Address.ToString()+" "+ (RemoteIpEndPoint as IPEndPoint).Port.ToString());
+                        //    memStream.Seek(0, SeekOrigin.Begin);
+                        //    memStream.SetLength(0);
+                        //}
+                        //ImageConverter.HexTXTbuffer(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty));
+
+                        //Console.WriteLine(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty));
+                        //string r = Calculate(content).ToString();
+                        //Send(r, Dstate);                    
+                        //memStream.Flush();
+                        #endregion
+
+                        if (BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("537A547A4E"))
+                        {
+                            Console.WriteLine($"{DateTime.Now.Ticks}-R");
+                            //Thread.Sleep(800);
+                            SYS.RecvTicks.Add(DateTime.Now.Ticks);
+                            if (SYS.UdpRunTest)
+                            {
+                                //Task.Run(() =>
+                                //{
+                                //    SYS.UdpSend(past, RemoteIpEndPoint);
+                                //});
+                                SYS.UdpSend(past,RemoteIpEndPoint);
+                            }
+                            //Thread.Sleep(1000);
+                        }
+
+                        if (Encoding.ASCII.GetString(State.buffer, 0, bytes).Contains("hello"))
+                        {
+                            SYS.SendIP = (RemoteIpEndPoint as IPEndPoint).Address.ToString();
+
+                            if (SYS.UdpRunTest)
+                            {
+                                //Task.Run(() =>
+                                //{
+                                //    SYS.UdpSend(past, RemoteIpEndPoint);
+                                //});
+                                Console.WriteLine((RemoteIpEndPoint as IPEndPoint).Address.ToString());
+                                SYS.UdpSend(past,RemoteIpEndPoint);
+                            }
+                        }
+                        //Console.WriteLine((RemoteIpEndPoint as IPEndPoint).Address.ToString());
+
+                        //ImageConverterV2.HexTXTbufferV2(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty));
+
+
+                        memStream.SetLength(0);
+
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message + "!!!!!!!");
+                        //Send(e.Message, Dstate);
+                    }
+                    
+                }
+                //Console.WriteLine((RemoteIpEndPoint as IPEndPoint).Address.ToString());
             }
             catch (Exception e)
             {
@@ -110,54 +183,8 @@ namespace DoroonNet.Command
                 //Send("Respect the buffer size which is " + DatagramState.BufferSize.ToString(), Dstate);
                 return;
             }
-
-            if (bytes > 0)
-            {   
-                State.sb.Append(BitConverter.ToString(State.buffer, 0, bytes));
-                memStream.Write(State.buffer, 0, bytes);
-                Next.Set();
-                try
-                {
-                    FlightInfoRightCommand FIRC = new FlightInfoRightCommand() { ImageID = (RemoteIpEndPoint as IPEndPoint).Port.ToString() };                   
-                    #region old
-                    //if (BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("537A547A4E"))
-                    //{
-                    //    revbyte += 1;
-                    //    //Console.WriteLine(revbyte);
-                    //    ImageConverter.HexWriterTxtAsync(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty));
-                    //    ConSoPt.ConsoPrint(revbyte.ToString()+" "+(RemoteIpEndPoint as IPEndPoint).Address.ToString()+" "+ (RemoteIpEndPoint as IPEndPoint).Port.ToString());
-                    //    memStream.Seek(0, SeekOrigin.Begin);
-                    //    memStream.SetLength(0);
-                    //}
-                    //ImageConverter.HexTXTbuffer(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty));
-
-                    //Console.WriteLine(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty));
-                    //string r = Calculate(content).ToString();
-                    //Send(r, Dstate);                    
-                    //memStream.Flush();
-                    #endregion
-
-                    if(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("537A547A4E"))
-                    {
-                        
-                        Console.WriteLine($"{DateTime.Now.Ticks}-R");
-                        Thread.Sleep(800);
-                        SYS.RecvTicks.Add(DateTime.Now.Ticks);
-                        //Thread.Sleep(1000);
-                    }
-
-                    //ImageConverterV2.HexTXTbufferV2(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty));
-                    memStream.SetLength(0);
-                   
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message+"!!!!!!!");
-                    //Send(e.Message, Dstate);
-                }
-                
-            }
         }
+        
 
 
     }

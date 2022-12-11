@@ -9,14 +9,10 @@
           "System.Text.Json": "4.7.2"
         },
         "compile": {
-          "lib/netcoreapp3.1/ControlzEx.dll": {
-            "related": ".pdb;.xml"
-          }
+          "lib/netcoreapp3.1/ControlzEx.dll": {}
         },
         "runtime": {
-          "lib/netcoreapp3.1/ControlzEx.dll": {
-            "related": ".pdb;.xml"
-          }
+          "lib/netcoreapp3.1/ControlzEx.dll": {}
         },
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WPF"
@@ -25,14 +21,10 @@
       "CsvHelper/27.2.1": {
         "type": "package",
         "compile": {
-          "lib/net5.0/CsvHelper.dll": {
-            "related": ".xml"
-          }
+          "lib/net5.0/CsvHelper.dll": {}
         },
         "runtime": {
-          "lib/net5.0/CsvHelper.dll": {
-            "related": ".xml"
-          }
+          "lib/net5.0/CsvHelper.dll": {}
         }
       },
       "EntityFramework/6.3.0": {
@@ -45,20 +37,12 @@
           "System.Data.SqlClient": "4.7.0"
         },
         "compile": {
-          "lib/netstandard2.1/EntityFramework.SqlServer.dll": {
-            "related": ".xml"
-          },
-          "lib/netstandard2.1/EntityFramework.dll": {
-            "related": ".SqlServer.xml;.xml"
-          }
+          "lib/netstandard2.1/EntityFramework.SqlServer.dll": {},
+          "lib/netstandard2.1/EntityFramework.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.1/EntityFramework.SqlServer.dll": {
-            "related": ".xml"
-          },
-          "lib/netstandard2.1/EntityFramework.dll": {
-            "related": ".SqlServer.xml;.xml"
-          }
+          "lib/netstandard2.1/EntityFramework.SqlServer.dll": {},
+          "lib/netstandard2.1/EntityFramework.dll": {}
         },
         "build": {
           "buildTransitive/EntityFramework.props": {},
@@ -68,14 +52,10 @@
       "Geolocation/1.2.1": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/Geolocation.dll": {
-            "related": ".pdb"
-          }
+          "lib/netstandard2.0/Geolocation.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/Geolocation.dll": {
-            "related": ".pdb"
-          }
+          "lib/netstandard2.0/Geolocation.dll": {}
         }
       },
       "GMap.NET.Core/2.0.2": {
@@ -114,14 +94,10 @@
           "ControlzEx": "4.4.0"
         },
         "compile": {
-          "lib/netcoreapp3.1/MahApps.Metro.dll": {
-            "related": ".pdb;.xml"
-          }
+          "lib/netcoreapp3.1/MahApps.Metro.dll": {}
         },
         "runtime": {
-          "lib/netcoreapp3.1/MahApps.Metro.dll": {
-            "related": ".pdb;.xml"
-          }
+          "lib/netcoreapp3.1/MahApps.Metro.dll": {}
         },
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WPF"
@@ -135,14 +111,10 @@
       "MaterialDesignColors/2.0.3": {
         "type": "package",
         "compile": {
-          "lib/netcoreapp3.1/MaterialDesignColors.dll": {
-            "related": ".pdb"
-          }
+          "lib/netcoreapp3.1/MaterialDesignColors.dll": {}
         },
         "runtime": {
-          "lib/netcoreapp3.1/MaterialDesignColors.dll": {
-            "related": ".pdb"
-          }
+          "lib/netcoreapp3.1/MaterialDesignColors.dll": {}
         }
       },
       "MaterialDesignThemes/4.2.1": {
@@ -151,14 +123,10 @@
           "MaterialDesignColors": "[2.0.3, 3.0.0)"
         },
         "compile": {
-          "lib/netcoreapp3.1/MaterialDesignThemes.Wpf.dll": {
-            "related": ".pdb;.xml"
-          }
+          "lib/netcoreapp3.1/MaterialDesignThemes.Wpf.dll": {}
         },
         "runtime": {
-          "lib/netcoreapp3.1/MaterialDesignThemes.Wpf.dll": {
-            "related": ".pdb;.xml"
-          }
+          "lib/netcoreapp3.1/MaterialDesignThemes.Wpf.dll": {}
         },
         "build": {
           "build/MaterialDesignThemes.targets": {}
@@ -189,14 +157,10 @@
           "System.Security.Principal.Windows": "4.6.0"
         },
         "compile": {
-          "ref/netstandard2.0/_._": {
-            "related": ".xml"
-          }
+          "ref/netstandard2.0/_._": {}
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.Win32.Registry.dll": {
-            "related": ".xml"
-          }
+          "lib/netstandard2.0/Microsoft.Win32.Registry.dll": {}
         },
         "runtimeTargets": {
           "runtimes/unix/lib/netstandard2.0/Microsoft.Win32.Registry.dll": {
@@ -215,14 +179,10 @@
           "Microsoft.NETCore.Platforms": "3.0.0"
         },
         "compile": {
-          "ref/netstandard2.0/_._": {
-            "related": ".xml"
-          }
+          "ref/netstandard2.0/_._": {}
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll": {
-            "related": ".xml"
-          }
+          "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll": {}
         },
         "runtimeTargets": {
           "runtimes/win/lib/netcoreapp3.0/Microsoft.Win32.SystemEvents.dll": {
@@ -234,14 +194,10 @@
       "Microsoft.Xaml.Behaviors.Wpf/1.1.19": {
         "type": "package",
         "compile": {
-          "lib/netcoreapp3.0/Microsoft.Xaml.Behaviors.dll": {
-            "related": ".pdb;.xml"
-          }
+          "lib/netcoreapp3.0/Microsoft.Xaml.Behaviors.dll": {}
         },
         "runtime": {
-          "lib/netcoreapp3.0/Microsoft.Xaml.Behaviors.dll": {
-            "related": ".pdb;.xml"
-          }
+          "lib/netcoreapp3.0/Microsoft.Xaml.Behaviors.dll": {}
         },
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WPF"
@@ -250,14 +206,10 @@
       "Newtonsoft.Json/12.0.3": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/Newtonsoft.Json.dll": {
-            "related": ".xml"
-          }
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/Newtonsoft.Json.dll": {
-            "related": ".xml"
-          }
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
         }
       },
       "runtime.native.System.Data.SqlClient.sni/4.6.0": {
@@ -301,14 +253,10 @@
           "System.Drawing.Common": "4.6.1"
         },
         "compile": {
-          "lib/net5.0/ScottPlot.dll": {
-            "related": ".xml"
-          }
+          "lib/net5.0/ScottPlot.dll": {}
         },
         "runtime": {
-          "lib/net5.0/ScottPlot.dll": {
-            "related": ".xml"
-          }
+          "lib/net5.0/ScottPlot.dll": {}
         }
       },
       "ScottPlot.WPF/4.1.27": {
@@ -329,14 +277,10 @@
       "Stub.System.Data.SQLite.Core.NetStandard/1.0.113.2": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.1/System.Data.SQLite.dll": {
-            "related": ".dll.altconfig;.xml"
-          }
+          "lib/netstandard2.1/System.Data.SQLite.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.1/System.Data.SQLite.dll": {
-            "related": ".dll.altconfig;.xml"
-          }
+          "lib/netstandard2.1/System.Data.SQLite.dll": {}
         },
         "runtimeTargets": {
           "runtimes/linux-x64/native/SQLite.Interop.dll": {
@@ -360,27 +304,19 @@
       "System.CodeDom/4.6.0": {
         "type": "package",
         "compile": {
-          "ref/netstandard2.0/System.CodeDom.dll": {
-            "related": ".xml"
-          }
+          "ref/netstandard2.0/System.CodeDom.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/System.CodeDom.dll": {
-            "related": ".xml"
-          }
+          "lib/netstandard2.0/System.CodeDom.dll": {}
         }
       },
       "System.ComponentModel.Annotations/4.6.0": {
         "type": "package",
         "compile": {
-          "ref/netstandard2.1/System.ComponentModel.Annotations.dll": {
-            "related": ".xml"
-          }
+          "ref/netstandard2.1/System.ComponentModel.Annotations.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.1/System.ComponentModel.Annotations.dll": {
-            "related": ".xml"
-          }
+          "lib/netstandard2.1/System.ComponentModel.Annotations.dll": {}
         }
       },
       "System.Configuration.ConfigurationManager/4.6.0": {
@@ -390,14 +326,10 @@
           "System.Security.Permissions": "4.6.0"
         },
         "compile": {
-          "ref/netstandard2.0/System.Configuration.ConfigurationManager.dll": {
-            "related": ".xml"
-          }
+          "ref/netstandard2.0/System.Configuration.ConfigurationManager.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/System.Configuration.ConfigurationManager.dll": {
-            "related": ".xml"
-          }
+          "lib/netstandard2.0/System.Configuration.ConfigurationManager.dll": {}
         }
       },
       "System.Data.SqlClient/4.7.0": {
@@ -408,14 +340,10 @@
           "runtime.native.System.Data.SqlClient.sni": "4.6.0"
         },
         "compile": {
-          "ref/netcoreapp2.1/System.Data.SqlClient.dll": {
-            "related": ".xml"
-          }
+          "ref/netcoreapp2.1/System.Data.SqlClient.dll": {}
         },
         "runtime": {
-          "lib/netcoreapp2.1/System.Data.SqlClient.dll": {
-            "related": ".xml"
-          }
+          "lib/netcoreapp2.1/System.Data.SqlClient.dll": {}
         },
         "runtimeTargets": {
           "runtimes/unix/lib/netcoreapp2.1/System.Data.SqlClient.dll": {
@@ -460,9 +388,7 @@
           "Microsoft.Win32.SystemEvents": "4.6.0"
         },
         "compile": {
-          "ref/netcoreapp3.0/System.Drawing.Common.dll": {
-            "related": ".xml"
-          }
+          "ref/netcoreapp3.0/System.Drawing.Common.dll": {}
         },
         "runtime": {
           "lib/netstandard2.0/System.Drawing.Common.dll": {}
@@ -485,14 +411,10 @@
           "System.Security.Principal.Windows": "4.6.0"
         },
         "compile": {
-          "ref/netstandard2.0/System.Security.AccessControl.dll": {
-            "related": ".xml"
-          }
+          "ref/netstandard2.0/System.Security.AccessControl.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/System.Security.AccessControl.dll": {
-            "related": ".xml"
-          }
+          "lib/netstandard2.0/System.Security.AccessControl.dll": {}
         },
         "runtimeTargets": {
           "runtimes/win/lib/netcoreapp2.0/System.Security.AccessControl.dll": {
@@ -504,14 +426,10 @@
       "System.Security.Cryptography.ProtectedData/4.6.0": {
         "type": "package",
         "compile": {
-          "ref/netstandard2.0/_._": {
-            "related": ".xml"
-          }
+          "ref/netstandard2.0/_._": {}
         },
         "runtime": {
-          "lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll": {
-            "related": ".xml"
-          }
+          "lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll": {}
         },
         "runtimeTargets": {
           "runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll": {
@@ -527,27 +445,19 @@
           "System.Windows.Extensions": "4.6.0"
         },
         "compile": {
-          "ref/netcoreapp3.0/System.Security.Permissions.dll": {
-            "related": ".xml"
-          }
+          "ref/netcoreapp3.0/System.Security.Permissions.dll": {}
         },
         "runtime": {
-          "lib/netcoreapp3.0/System.Security.Permissions.dll": {
-            "related": ".xml"
-          }
+          "lib/netcoreapp3.0/System.Security.Permissions.dll": {}
         }
       },
       "System.Security.Principal.Windows/4.6.0": {
         "type": "package",
         "compile": {
-          "ref/netcoreapp3.0/System.Security.Principal.Windows.dll": {
-            "related": ".xml"
-          }
+          "ref/netcoreapp3.0/System.Security.Principal.Windows.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/System.Security.Principal.Windows.dll": {
-            "related": ".xml"
-          }
+          "lib/netstandard2.0/System.Security.Principal.Windows.dll": {}
         },
         "runtimeTargets": {
           "runtimes/unix/lib/netcoreapp2.1/System.Security.Principal.Windows.dll": {
@@ -563,14 +473,10 @@
       "System.Text.Json/4.7.2": {
         "type": "package",
         "compile": {
-          "lib/netcoreapp3.0/System.Text.Json.dll": {
-            "related": ".xml"
-          }
+          "lib/netcoreapp3.0/System.Text.Json.dll": {}
         },
         "runtime": {
-          "lib/netcoreapp3.0/System.Text.Json.dll": {
-            "related": ".xml"
-          }
+          "lib/netcoreapp3.0/System.Text.Json.dll": {}
         }
       },
       "System.Windows.Extensions/4.6.0": {
@@ -579,14 +485,10 @@
           "System.Drawing.Common": "4.6.0"
         },
         "compile": {
-          "ref/netcoreapp3.0/System.Windows.Extensions.dll": {
-            "related": ".xml"
-          }
+          "ref/netcoreapp3.0/System.Windows.Extensions.dll": {}
         },
         "runtime": {
-          "lib/netcoreapp3.0/System.Windows.Extensions.dll": {
-            "related": ".xml"
-          }
+          "lib/netcoreapp3.0/System.Windows.Extensions.dll": {}
         },
         "runtimeTargets": {
           "runtimes/win/lib/netcoreapp3.0/System.Windows.Extensions.dll": {
@@ -1710,19 +1612,21 @@
   },
   "packageFolders": {
     "C:\\Users\\001\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "c:\\program files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.2.1224",
     "restore": {
-      "projectUniqueName": "D:\\Code\\DoroonNet\\DoroonNet.csproj",
+      "projectUniqueName": "E:\\Program\\DoroonNet\\DoroonNet.csproj",
       "projectName": "DoroonNet",
-      "projectPath": "D:\\Code\\DoroonNet\\DoroonNet.csproj",
+      "projectPath": "E:\\Program\\DoroonNet\\DoroonNet.csproj",
       "packagesPath": "C:\\Users\\001\\.nuget\\packages\\",
-      "outputPath": "D:\\Code\\DoroonNet\\obj\\",
+      "outputPath": "E:\\Program\\DoroonNet\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "c:\\program files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
         "C:\\Users\\001\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -1730,7 +1634,7 @@
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net5.0-windows"
+        "net5.0-windows7.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
@@ -1787,8 +1691,7 @@
           "net47",
           "net471",
           "net472",
-          "net48",
-          "net481"
+          "net48"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -1800,7 +1703,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "c:\\program files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }
