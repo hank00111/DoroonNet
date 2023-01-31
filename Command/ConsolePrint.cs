@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,13 +11,21 @@ namespace DoroonNet.Command
 
     public class ConsolePrint
     {
-        public Task ConsoPrint(string TxT)
+        static ConcurrentQueue<string> ConsoPrintQueue = new ConcurrentQueue<string>();
+        string retValue;
+        public void ConsoPrint(string TxT)
         {
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.Write("[" + DateTime.Now.ToString("HH:mm:ss") + "]" + "[Info] ");
-            Console.ResetColor();
-            Console.WriteLine(TxT);
-            return Task.CompletedTask;
+            ConsoPrintQueue.Enqueue(TxT);
+
+            foreach (string queue in ConsoPrintQueue)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write($"[{DateTime.Now.ToString("HH:mm:ss")}][Info] ");
+                Console.ResetColor();
+                Console.WriteLine(queue.ToString());
+                ConsoPrintQueue.TryDequeue(out retValue);
+            }
+            //return Task.CompletedTask;
         }
 
         //public void StartConPt()

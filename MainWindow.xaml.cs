@@ -439,7 +439,7 @@ namespace DoroonNet
                 MainMap.Markers.Add(marker);
                 DroneMarkerCount += 1;
                 //MovePositionBool = true;
-                Console.WriteLine("ADD " + ID);
+                Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}][Info] ADD {ID}");
             }));
 
         }

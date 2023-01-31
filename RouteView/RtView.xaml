@@ -228,14 +228,14 @@
                                                   Style="{DynamicResource MaterialDesignRaisedLightButton}"
                                                   FontSize="22" FontFamily="Roboto" BorderBrush="{x:Null}" 
                                                   Background="#FFB4B4B4" Margin="2,0,0,0" 
-                                                  Click="AnglePlusBt_Click" ClickMode="Press"/>
+                                                  Click="AnglePlusBtFW_Click" ClickMode="Press"/>
                                     <RepeatButton Content="-" Width="50" Height="30" FontSize="22"
                                                   Style="{DynamicResource MaterialDesignRaisedLightButton}"  
                                                   FontFamily="Roboto"  BorderBrush="{x:Null}" 
                                                   Background="#FFB4B4B4" Margin="5,0,0,0"
-                                                  FontWeight="ExtraBold" Click="AngleDimBt_Click" ClickMode="Press"/>
+                                                  FontWeight="ExtraBold" Click="AngleDimBtFW_Click" ClickMode="Press"/>
                                     
-                                    <TextBox  Text="5" Width="50" VerticalAlignment="Stretch" Style="{DynamicResource MahApps.Styles.Control.WindowCommands}" Height="28" FontFamily="Roboto" Margin="5,0,0,0" FontSize="16" Foreground="White"/>
+                                    <TextBox x:Name="AngleTxTBoxFW"  Text="5" Width="50" VerticalAlignment="Stretch" Style="{DynamicResource MahApps.Styles.Control.WindowCommands}" Height="28" FontFamily="Roboto" Margin="5,0,0,0" FontSize="16" Foreground="White"/>
                                 </StackPanel>
                                 <!--#endregion-->
 

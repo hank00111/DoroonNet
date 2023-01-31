@@ -105,7 +105,7 @@ namespace DoroonNet.Command
                 while (true)
                 {
                     allDone.Reset(); // Start an asynchronous socket to listen for connections.  
-                    ConSoPt.ConsoPrint("[Debug] " + "Waiting for a connection...");
+                    Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}][Info] Waiting for a connection...");
                     listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
                     allDone.WaitOne();// Wait until a connection is made before continuing.                      
                 }
@@ -180,7 +180,7 @@ namespace DoroonNet.Command
                     {
                         LossCount += 1;
                         RecvCount -= 1;
-                        Console.WriteLine("Data Error");
+                        Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}][Info] Data Error");
                     }
 
                     if(bytesRead == 2 && BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("49"))
@@ -664,6 +664,7 @@ namespace DoroonNet.Command
             FlightList = DoroonDB.GetFlightID();
             //Console.WriteLine(FlightList.Count);
             Console.WriteLine(((IPEndPoint)handler.RemoteEndPoint).Port.ToString());
+
             if (Clients.Count == ins.CollectionListPartial.Count && Clients.Count != 0)
             {
                 Application.Current.Dispatcher.BeginInvoke((Action)delegate ()

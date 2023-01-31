@@ -1250,6 +1250,22 @@ GeoCalculator.GetDistance(RecPoint[i - 1].Lat, RecPoint[i - 1].Lng, RecPoint[i].
                 TEFW(RtV.SLTxFW, 0, RtV.AngleTxFW);
             }
         }
+        private void AnglePlusBtFW_Click(object sender, RoutedEventArgs e)
+        {
+            if (RtV.AngleTxFW < 360)
+            {
+                RtV.AngleTxFW += int.Parse(AngleTxTBoxFW.Text);
+                TEFW(RtV.HeightTx, RtV.WidthTx, RtV.AngleTxFW);
+            }
+        }
+        private void AngleDimBtFW_Click(object sender, RoutedEventArgs e)
+        {
+            if (RtV.AngleTxFW > -360)
+            {
+                RtV.AngleTxFW -= int.Parse(AngleTxTBoxFW.Text);
+                TEFW(RtV.HeightTx, RtV.WidthTx, RtV.AngleTxFW);
+            }
+        }
         private void AltPlusBtFW_Click(object sender, RoutedEventArgs e)
         {
             RtV.AltTxFW += float.Parse(AltTxTBoxFW.Text);
