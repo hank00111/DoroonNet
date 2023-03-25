@@ -44,8 +44,8 @@ namespace DoroonNet.Command
             Console.WriteLine("服務端已經開啟");
             t1 = new Thread(ReciveMsg);//開啟接收訊息執行緒
             t1.Start();
-            t2 = new Thread(sendMsg);//開啟發送訊息執行緒
-            t2.Start();
+            //t2 = new Thread(sendMsg);//開啟發送訊息執行緒
+            //t2.Start();
         }
 
         private static void ReciveMsg()
@@ -62,35 +62,35 @@ namespace DoroonNet.Command
                         FlightInfoRightCommand FIRC = new FlightInfoRightCommand() { ImageID = (RemoteIpEndPoint as IPEndPoint).Port.ToString() };
                         memStream.Write(buffer, 0, length);
                         //string message = Encoding.UTF8.GetString(buffer, 0, length);                        
-                        if (BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("537A547A4E"))
-                        {
-                            //CanSend = true;
-                            if (!Calculate)
-                            {
-                                RecvTicks.Add(DateTime.Now.Ticks);
-                                Console.WriteLine($"{DateTime.Now.Ticks}-R");
-                            }       
-                            //sendMsg(RemoteIpEndPoint);
-                        }
+                        //if (BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("537A547A4E"))
+                        //{
+                        //    //CanSend = true;
+                        //    if (!Calculate)
+                        //    {
+                        //        RecvTicks.Add(DateTime.Now.Ticks);
+                        //        Console.WriteLine($"{DateTime.Now.Ticks}-R");
+                        //    }       
+                        //    //sendMsg(RemoteIpEndPoint);
+                        //}
 
-                        if (Encoding.ASCII.GetString(memStream.ToArray(), 0, length).Contains("hello"))
-                        {
-                            CanSend = true;
-                            Console.WriteLine(RemoteIpEndPoint.ToString());
-                            //sendMsg(RemoteIpEndPoint);
-                            //SYS.SendIP = (RemoteIpEndPoint as IPEndPoint).Address.ToString();
+                        //if (Encoding.ASCII.GetString(memStream.ToArray(), 0, length).Contains("hello"))
+                        //{
+                        //    CanSend = true;
+                        //    Console.WriteLine(RemoteIpEndPoint.ToString());
+                        //    //sendMsg(RemoteIpEndPoint);
+                        //    //SYS.SendIP = (RemoteIpEndPoint as IPEndPoint).Address.ToString();
 
-                            //if (SYS.UdpRunTest)
-                            //{
-                            //    //Task.Run(() =>
-                            //    //{
-                            //    //    SYS.UdpSend(past, RemoteIpEndPoint);
-                            //    ////});
-                            //    //Console.WriteLine((RemoteIpEndPoint as IPEndPoint).Address.ToString());
-                            //    //SYS.UdpSend(past, RemoteIpEndPoint);
-                            //}
-                        }
-                        //ImageConverterV2.HexTXTbufferV2(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty));
+                        //    //if (SYS.UdpRunTest)
+                        //    //{
+                        //    //    //Task.Run(() =>
+                        //    //    //{
+                        //    //    //    SYS.UdpSend(past, RemoteIpEndPoint);
+                        //    //    ////});
+                        //    //    //Console.WriteLine((RemoteIpEndPoint as IPEndPoint).Address.ToString());
+                        //    //    //SYS.UdpSend(past, RemoteIpEndPoint);
+                        //    //}
+                        //}
+                        ImageConverterV2.HexTXTbufferV2(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty));
                         memStream.SetLength(0);
                     }
                     catch (Exception e)

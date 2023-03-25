@@ -92,7 +92,7 @@ namespace DoroonNet
 
         public void StarUcp(Object stateInfo)
         {
-            UdpServerV3 Udplink = new UdpServerV3();
+            UDPServer Udplink = new UDPServer();
             Udplink.UDPStart();
         }
 

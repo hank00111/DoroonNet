@@ -70,7 +70,7 @@ namespace DoroonNet.Command
                 Socket S = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                 S.Bind(new IPEndPoint(IPAddress.Any, 54088));
                 S.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.PacketInformation, true);
-
+                Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}][Info] UDP Server Start...");
                 while (true)
                 {
                     Next.Reset();
@@ -129,40 +129,39 @@ namespace DoroonNet.Command
                         //memStream.Flush();
                         #endregion
 
-                        if (BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("537A547A4E"))
-                        {
-                            Console.WriteLine($"{DateTime.Now.Ticks}-R");
-                            //Thread.Sleep(800);
-                            SYS.RecvTicks.Add(DateTime.Now.Ticks);
-                            if (SYS.UdpRunTest)
-                            {
-                                //Task.Run(() =>
-                                //{
-                                //    SYS.UdpSend(past, RemoteIpEndPoint);
-                                //});
-                                SYS.UdpSend(past,RemoteIpEndPoint);
-                            }
-                            //Thread.Sleep(1000);
-                        }
+                        //if (BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty).Contains("537A547A4E"))
+                        //{
+                        //    Console.WriteLine($"{DateTime.Now.Ticks}-R");
+                        //    //Thread.Sleep(800);
+                        //    SYS.RecvTicks.Add(DateTime.Now.Ticks);
+                        //    if (SYS.UdpRunTest)
+                        //    {
+                        //        //Task.Run(() =>
+                        //        //{
+                        //        //    SYS.UdpSend(past, RemoteIpEndPoint);
+                        //        //});
+                        //        SYS.UdpSend(past,RemoteIpEndPoint);
+                        //    }
+                        //    //Thread.Sleep(1000);
+                        //}
 
-                        if (Encoding.ASCII.GetString(State.buffer, 0, bytes).Contains("hello"))
-                        {
-                            SYS.SendIP = (RemoteIpEndPoint as IPEndPoint).Address.ToString();
+                        //if (Encoding.ASCII.GetString(State.buffer, 0, bytes).Contains("hello"))
+                        //{
+                        //    SYS.SendIP = (RemoteIpEndPoint as IPEndPoint).Address.ToString();
 
-                            if (SYS.UdpRunTest)
-                            {
-                                //Task.Run(() =>
-                                //{
-                                //    SYS.UdpSend(past, RemoteIpEndPoint);
-                                //});
-                                Console.WriteLine((RemoteIpEndPoint as IPEndPoint).Address.ToString());
-                                SYS.UdpSend(past,RemoteIpEndPoint);
-                            }
-                        }
+                        //    if (SYS.UdpRunTest)
+                        //    {
+                        //        //Task.Run(() =>
+                        //        //{
+                        //        //    SYS.UdpSend(past, RemoteIpEndPoint);
+                        //        //});
+                        //        Console.WriteLine((RemoteIpEndPoint as IPEndPoint).Address.ToString());
+                        //        SYS.UdpSend(past,RemoteIpEndPoint);
+                        //    }
+                        //}
                         //Console.WriteLine((RemoteIpEndPoint as IPEndPoint).Address.ToString());
 
-                        //ImageConverterV2.HexTXTbufferV2(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty));
-
+                        ImageConverterV2.HexTXTbufferV2(BitConverter.ToString(memStream.ToArray()).Replace("-", string.Empty));
 
                         memStream.SetLength(0);
 
